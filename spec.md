@@ -27,7 +27,7 @@ SPECIFICATIONS:
     *   Users must be able to click on each of the 8 outer cells.
     *   Upon clicking a cell, a designated information panel (e.g., a modal popup or a dedicated section on the page) should appear, displaying the following attributes for the selected cell:
         *   **Trigram Symbol** and **Trigram Name**.
-        *   **Direction** (e.g., "North - contains the 子 Zi, 壬 Ren, 癸 Gui mountains used for precise orientation in advanced Feng Shui"). *This introduces the 24 Mountains concept subtly.*
+        *   **Direction** When showing the direction, it should already hint at the 24 Mountains as specified: e.g., "Direction: 北 North (conceptually encompassing the 壬 Ren, 子 Zi, 癸 Gui mountains used for precise orientation)."
         *   **Element** associated with that trigram (水 Water, 土 Earth, 木 Wood, 火 Fire, 金 Metal).
         *   A short sentence describing the **general qualities or aspects of life** that trigram represents (e.g., "乾 (Qian) represents Heaven, strength, and leadership.", "坎 (Kan) represents Water, challenges, and introspection.").
         *   A concise description of what that **Element in that position can enhance** (e.g., "The Water element in the North can enhance career flow and wisdom.").
@@ -62,12 +62,56 @@ SPECIFICATIONS:
         *   Visual diagrams illustrating:
             *   The **Generating Cycle (相生 Xiangsheng)** with brief descriptions (e.g., "Wood feeds Fire...").
             *   The **Controlling Cycle (相克 Xiangke)** with brief descriptions (e.g., "Fire melts Metal...").
-    *   **B. "About Directions & 二十四山 (24 Mountains)":**
-        *   Explanation: "While the Ba Gua provides 8 main directions (each 45 degrees), traditional Feng Shui and the '水到奇成' method often use a more precise directional system called the 24 Mountains (二十四山)."
-        *   Explanation: "Each of the 8 Ba Gua directions is further subdivided into three 'Mountains' (each approximately 15 degrees), allowing for more specific orientation."
-        *   Explanation: "A special compass called a Luopan (罗盘) is used to determine the exact 'Mountain' a building faces or sits on. This app introduces the Ba Gua foundation; the '水到奇成' course will delve into the application of the 24 Mountains with Qimen Dunjia."
+    *   **B. "About Directions, 罗盘 (Luopan), & 二十四山 (24 Mountains)":**
+        *   Explanation: "The Ba Gua provides 8 main directions (each 45 degrees). For greater precision in Feng Shui analysis, especially in the '水到奇成' methodology, these are subdivided into the 24 Mountains (二十四山)."
+        *   Explanation: "Each of the 8 Ba Gua directions (e.g., North) contains three 'Mountains' (e.g., North contains 壬 Ren, 子 Zi, 癸 Gui), each spanning approximately 15 degrees. This app allows you to explore these Mountains visually."
+        *   Explanation: "A specialized Feng Shui compass called a Luopan (罗盘) is essential for accurately determining which of these 24 Mountains a building faces (向 Xiang) or sits on (坐 Zuo)."
+        *   Explanation: "Understanding the precise Mountain is fundamental in the '水到奇成' course before overlaying a dynamic Qimen Dunjia chart for analysis and remedy."
     *   **C. "About this App & Next Steps":**
         *   Briefly explain that this app covers foundational concepts for the "水到奇成" course.
         *   Mention that the course will expand on these by teaching how to interpret dynamic Qimen charts, identify "四害" (problem indicators), and apply this knowledge practically using the 24 Mountains.
+
+
+7.  **Feng Shui 二十四山 (24 Mountains) Overlay Mode**
+    *   **7.1. Activation Button:**
+        *   A clearly visible, separate button labeled "Overlay 24 Mountains (二十四山)" must be present.
+        *   This button should act as a toggle. When clicked (toggled on), the 24 Mountains overlay is applied. When clicked again (toggled off), it's removed.
+        *   This overlay can be active **independently** of the "Qimen Dunjia Gates" overlay or **in conjunction** with it.
+
+    *   **7.2. Visual Representation on the Grid (When 24 Mountains Overlay is Active):**
+        *   Each of the 8 outer Ba Gua cells will be **visually subdivided into three distinct, equal segments** (e.g., three horizontal strips or three vertical columns within the bounds of the original Ba Gua cell).
+        *   Each of these 24 segments will be clearly labeled with its **specific Mountain Name**. The names are:
+            *   **坎 (Kan) / North:** 壬 (Ren), 子 (Zi), 癸 (Gui)
+            *   **艮 (Gen) / Northeast:** 丑 (Chou), 艮 (Gen), 寅 (Yin)
+            *   **震 (Zhen) / East:** 甲 (Jia), 卯 (Mao), 乙 (Yi)
+            *   **巽 (Xun) / Southeast:** 辰 (Chen), 巽 (Xun), 巳 (Si)
+            *   **离 (Li) / South:** 丙 (Bing), 午 (Wu), 丁 (Ding)
+            *   **坤 (Kun) / Southwest:** 未 (Wei), 坤 (Kun), 申 (Shen)
+            *   **兑 (Dui) / West:** 庚 (Geng), 酉 (You), 辛 (Xin)
+            *   **乾 (Qian) / Northwest:** 戌 (Xu), 乾 (Qian), 亥 (Hai)
+            *(Labels should be concise enough to fit, perhaps with full names on hover/click if space is an issue, but direct labeling is preferred).*
+        *   The existing Ba Gua Trigram Symbol, Name, and Direction labels for the parent Ba Gua cell should remain visible, perhaps slightly repositioned or styled to accommodate the Mountain segments.
+        *   The Central Palace ("中宫") is not subdivided for the 24 Mountains.
+
+    *   **7.3. Interactivity with 24 Mountains Overlay Active:**
+        *   Users must be able to click on each of the **24 individual Mountain segments**.
+        *   Clicking on a Ba Gua cell's general area (if not directly on a Mountain segment, though clicking segments should be prioritized) would ideally show the parent Ba Gua cell's info as per Spec 3 (and Spec 5 if Qimen overlay is also active).
+        *   Upon clicking a **specific Mountain segment**, the designated information panel should appear/update, displaying the following attributes for the **selected Mountain**:
+            *   **A. Mountain Name:** (e.g., "子 (Zi) Mountain").
+            *   **B. Parent Ba Gua Palace:** "Belongs to: 坎 (Kan) Palace - 北 (North) Direction."
+            *   **C. Approximate Degree Range:** (e.g., "Approx. Degrees: 352.5° - 7.5°"). *This range data will need to be pre-defined for all 24 Mountains.*
+            *   **D. Element (Inherited):** "Primary Element: 水 (Water) - inherited from the 坎 (Kan) Palace. The '水到奇成' course will clarify if specific Mountain nuances apply." *This manages expectations about deeper elemental systems not covered foundationally.*
+            *   **E. Brief Feng Shui Implication/Use:** A very short, high-level sentence (e.g., "子 (Zi) Mountain: Represents the peak of Water energy, often associated with midnight, wisdom, and the direct North. Precise for determining house facing or sitting for specific Feng Shui audits.").
+            *   **F. Relevance to "水到奇成" Course:** "In the '水到奇成' course, accurately identifying the Facing or Sitting Mountain (e.g., Tử Mountain) of a property using a Luopan (罗盘) is a critical first step. This precise directional data is then used as the basis for overlaying and interpreting the Qimen Dunjia chart for that specific location and time."
+
+    *   **7.4. Combined Overlay Interactivity (24 Mountains + Qimen Dunjia Gates Active):**
+        *   If both the "Overlay 24 Mountains" and "Overlay Qimen Dunjia Gates" modes are active, clicking on a **specific Mountain segment** should ideally show a comprehensive view in the information panel:
+            *   **All information for the selected Mountain (Spec 7.3 A-F).**
+            *   **PLUS, the Qimen Gate information for the parent Ba Gua Palace:**
+                *   "Qimen Gate in this Sector: [Gate Name, e.g., 休门 (Xiu Men) - Rest Gate] (as it currently occupies the [Parent Ba Gua Palace Name, e.g., 坎 (Kan) Palace])."
+                *   The Gate's properties and conceptual interaction as per Spec 5.
+            *   *(This allows the user to conceptually see: "My house faces Zi Mountain, which is in the Kan Palace. In this Qimen chart (conceptualized by home palace gates here), the Xiu Men is in Kan. How does this all relate?").*
+        *   The goal is to help the user begin to associate a precise Mountain direction with the broader Qimen Gate energy occupying that sector.
+
 
 The app must be fully responsive and function properly on both desktop and mobile and it supports Chinese (default) and English. Provide the code as a single, self-contained HTML document. All styles and scripts must be inline. In the result, encase the code between "```" and "```" for easy parsing.
