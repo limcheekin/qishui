@@ -1,117 +1,164 @@
-Build an interactive web app to help users understand the basics of Feng Shui based on the Bagua model, and how Qimen Dunjia (a type of Chinese divination) can be integrated into it.
+**SPECIFICATIONS: Interactive Feng Shui & Qimen Dunjia Foundations App**
 
-SPECIFICATIONS:
-
-**Purpose:** To build an interactive web app helping users understand the basics of Feng Shui based on the 后天八卦 (Houtian Ba Gua) / 九宫格 (Jiu Gong Ge) model, the fundamentals of 五行 (Wu Xing), and how 奇门遁甲 (Qimen Dunjia) Eight Gates (八门) can be conceptually integrated. This app serves as a foundational learning tool for the "水到奇成" course.
+**Purpose:** To build an interactive web app helping users understand the basics of Feng Shui based on the 后天八卦 (Houtian Ba Gua) / 九宫格 (Jiu Gong Ge) model, the fundamentals of 五行 (Wu Xing), and how 奇门遁甲 (Qimen Dunjia) Eight Gates (八门) can be conceptually integrated with the 二十四山 (24 Mountains). This app serves as a foundational learning tool for the "水到奇成" course.
 
 **General Requirements:**
 
-1.  The app should be a single, self-contained HTML document using only inline HTML, CSS, and JavaScript. No external libraries are allowed.
-2.  The visual style must be clean, easily readable, and fully responsive, functioning properly on both desktop and mobile devices.
-3.  A clear title "后天八卦 (Houtian Ba Gua) / 九宫格 (Jiu Gong Ge) Foundations" should be displayed above the main grid.
+1.  **Technology Stack:**
+    *   Single, self-contained HTML document using only inline HTML5, CSS3, and vanilla JavaScript.
+    *   No external libraries are allowed.
+    *   Code within the single file should be well-structured with clear commenting (e.g., CSS rules grouped by component, JS functions grouped by feature) for maintainability.
+
+2.  **Visual Design & UX:**
+    *   The visual style must be clean, minimalist, and highly readable.
+    *   Effective visual hierarchy (e.g., font sizes, weights, spacing) must be used to guide the user's attention, especially in information-dense areas like the info panel.
+    *   The User Interface (UI) must be intuitive, especially the controls for overlays and language switching.
+    *   All interactive elements (buttons, clickable grid cells/segments) must have clear hover, active, and focus states for immediate visual feedback.
+    *   Subtle, non-jarring CSS transitions (e.g., fade-in/out, slide) should be considered for actions like opening/closing the info panel or switching overlays to enhance smoothness.
+    *   The app must be fully responsive, ensuring optimal functionality and readability on both desktop and mobile devices.
+        *   Prioritize clarity on smaller screens.
+        *   Ensure touch targets (buttons, grid cells, segments) are adequately sized for mobile (e.g., minimum 44x44px effective area) to prevent mis-taps.
+
+3.  **Localization:**
+    *   The app must support **Chinese (Simplified - default)** and **English**.
+    *   A clear and easily accessible mechanism (e.g., a dropdown or toggle buttons in a fixed/sticky header or footer) must be provided for users to switch languages. This switcher must remain visible even when the info panel is open or content is scrolled.
+    *   All display text, labels, and informational content must be translated.
+    *   The selected language preference should be persisted (e.g., using `localStorage`) so users do not have to re-select it on subsequent visits or page refreshes.
+
+4.  **App Title:**
+    *   A clear title "后天八卦 (Houtian Ba Gua) / 九宫格 (Jiu Gong Ge) Foundations" (with its English equivalent "Later Heaven Ba Gua / Nine Palaces Grid Foundations") should be displayed prominently above the main grid, respecting the selected language.
+    *   Consider including the course name "水到奇成 Course" subtly in the footer or an "About" section for branding reinforcement.
 
 **Detailed Specifications:**
 
 1.  **Central Element: The Ba Gua Grid**
-    *   The app will present a 3x3 grid. This grid is the central interactive element.
-    *   The center cell of the grid will remain visually distinct (e.g., slightly different background) but will not be clickable for detailed information in the Ba Gua-only mode. It can be labeled "中宫 (Zhong Gong - Central Palace)".
+    *   The app will present a 3x3 grid, serving as the central interactive element.
+    *   The arrangement of the 8 outer cells must follow the standard Houtian Ba Gua sequence:
+        *   Top Row (L-R): 巽 Xun (SE), 離 Li (S), 坤 Kun (SW)
+        *   Middle Row (L-R): 震 Zhen (E), 中宫 Zhong Gong, 兌 Dui (W)
+        *   Bottom Row (L-R): 艮 Gen (NE), 坎 Kan (N), 乾 Qian (NW)
+    *   The center cell of the grid will be visually distinct (e.g., a slightly different, neutral background) and labeled "中宫 (Zhong Gong - Central Palace)" (with English translation). It will **not** be clickable for detailed attribute information in any mode or overlay configuration.
 
 2.  **Ba Gua Mode (Default View):**
-    *   Each of the 8 outer cells in the grid should be clearly labeled with:
-        *   Its corresponding **Trigram Symbol** (e.g., ☰, ☵, ☶, ☳, ☴, ☲, ☷, ☱).
-        *   Its **Trigram Name** (乾 Qian, 坎 Kan, 艮 Gen, 震 Zhen, 巽 Xun, 离 Li, 坤 Kun, 兑 Dui).
-        *   Its associated **Direction** (西北 Northwest, 北 North, 东北 Northeast, 东 East, 东南 Southeast, 南 South, 西南 Southwest, 西 West).
-    *   A subtle background color tint representing the cell's primary Element can be applied to each of the 8 outer cells (e.g., light blue for Water, light green for Wood).
+    *   Each of the 8 outer cells in the grid should be clearly and concisely labeled, with a consistent display order (e.g., 1. Trigram Symbol, 2. Trigram Name, 3. Direction):
+        *   Its corresponding **Trigram Symbol** (e.g., ☰, ☵).
+        *   Its **Trigram Name** (e.g., 乾 Qian).
+        *   Its associated **Direction** (e.g., 西北 Northwest). *(Translations for names and directions required).*
+    *   **Visual Cue:** A subtle, non-intrusive background color tint representing the cell's primary Element can be applied to each of the 8 outer cells (e.g., light blue for Water, light green for Wood). Ensure sufficient color contrast between the background tint and text labels for readability (WCAG AA compliance).
 
 3.  **Interactivity in Ba Gua Mode:**
     *   Users must be able to click on each of the 8 outer cells.
-    *   Upon clicking a cell, a designated information panel (e.g., a modal popup or a dedicated section on the page) should appear, displaying the following attributes for the selected cell:
+    *   Upon clicking a cell, a designated information panel (e.g., a well-styled modal popup or a dynamic sidebar section) should appear. This panel must be designed to handle varying amounts of information clearly. Content should be scrollable if necessary, especially on mobile.
+    *   The info panel must be dismissible via clear methods (e.g., an "X" button, clicking outside the panel area, pressing the Escape key).
+    *   The panel will display the following attributes for the selected cell (all text translatable):
         *   **Trigram Symbol** and **Trigram Name**.
-        *   **Direction** When showing the direction, it should already hint at the 24 Mountains as specified: e.g., "Direction: 北 North (conceptually encompassing the 壬 Ren, 子 Zi, 癸 Gui mountains used for precise orientation)."
-        *   **Element** associated with that trigram (水 Water, 土 Earth, 木 Wood, 火 Fire, 金 Metal).
-        *   A short sentence describing the **general qualities or aspects of life** that trigram represents (e.g., "乾 (Qian) represents Heaven, strength, and leadership.", "坎 (Kan) represents Water, challenges, and introspection.").
-        *   A concise description of what that **Element in that position can enhance** (e.g., "The Water element in the North can enhance career flow and wisdom.").
-        *   **五行 (Wu Xing) Interactions:**
-            *   "Generates: [Element it generates] (e.g., Water generates Wood)"
-            *   "Controls: [Element it controls] (e.g., Water controls Fire)"
-            *   "Is Generated By: [Element that generates it] (e.g., Water is generated by Metal)"
-            *   "Is Controlled By: [Element that controls it] (e.g., Water is controlled by Earth)"
+        *   **Direction:** e.g., "北 North (conceptually encompassing the 壬 Ren, 子 Zi, 癸 Gui mountains, which are used for precise orientation in advanced Feng Shui)."
+        *   **Element** associated with that trigram (e.g., 水 Water).
+        *   **General Qualities:** A short sentence describing aspects of life that trigram represents (e.g., "乾 (Qian) represents Heaven, strength, and leadership.").
+        *   **Enhancement Potential:** A concise description of what that Element in that position can enhance (e.g., "The Water element in the North can enhance career flow and wisdom.").
+        *   **五行 (Wu Xing) Interactions (clearly sectioned, including Pinyin):**
+            *   "Generates (生 shēng): [Element it generates] (e.g., Water generates Wood / 水生木 Shuǐ shēng Mù)"
+            *   "Controls (克 kè): [Element it controls] (e.g., Water controls Fire / 水克火 Shuǐ kè Huǒ)"
+            *   "Is Generated By (被生 bèi shēng): [Element that generates it] (e.g., Water is generated by Metal / 金生水 Jīn shēng Shuǐ)"
+            *   "Is Controlled By (被克 bèi kè): [Element that controls it] (e.g., Water is controlled by Earth / 土克水 Tǔ kè Shuǐ)"
 
 4.  **Qimen Dunjia Overlay Mode:**
-    *   A clearly visible button labeled "Overlay Qimen Dunjia Gates (八门)" must be present.
-    *   When this button is clicked (toggled on):
-        *   A new set of labels representing the **Eight Gates (八门)** (开 Kai, 休 Xiu, 生 Sheng, 伤 Shang, 杜 Du, 景 Jing, 死 Si, 惊 Jing) should appear prominently on each of the 8 outer cells, *in addition* to the existing Ba Gua labels (Trigram Symbol, Name, Direction).
-        *   Each cell will be labeled with the specific Gate that **originates** from (corresponds to) its Ba Gua location.
-        *   The Central Palace ("中宫") cell, when the Qimen overlay is active, should display a simple, generic star symbol (e.g., ★ or ☆) without further interactive detail, representing the conceptual presence of a "star" in Qimen charts.
-    *   The button should act as a toggle (e.g., text changes to "Remove Qimen Overlay" or its state is visually indicated).
+    *   **Activation Button:** A clearly visible button labeled "Show Qimen Gates (八门)" (with English translation, changing to "Hide Qimen Gates" when active) must be present. This button should have distinct visual states for "on" and "off" (e.g., color change, icon change).
+    *   When toggled on:
+        *   New labels for the **Eight Gates (八门)** appear prominently within each of the 8 outer cells, *in addition* to existing Ba Gua labels.
+        *   Each cell is labeled with the Gate that **originates** from its Ba Gua location (fixed "home palace" mapping):
+            *   休门 (Xiu Men) in 坎 (Kan) Palace
+            *   生门 (Sheng Men) in 艮 (Gen) Palace
+            *   伤门 (Shang Men) in 震 (Zhen) Palace
+            *   杜门 (Du Men) in 巽 (Xun) Palace
+            *   景门 (Jing Men) in 离 (Li) Palace
+            *   死门 (Si Men) in 坤 (Kun) Palace
+            *   惊门 (Jing Men - different Jing) in 兑 (Dui) Palace
+            *   开门 (Kai Men) in 乾 (Qian) Palace
+        *   **Label Clarity Strategy:** To ensure labels do not excessively overlap:
+            *   Consider a slightly smaller font for Gate names when the overlay is active.
+            *   Position Gate names consistently (e.g., below the Ba Gua name).
+            *   If necessary for extreme space constraints on the grid, Gate names could be abbreviated (e.g., "开" for "开门"), with full names always available in the info panel.
+        *   The Central Palace ("中宫") cell, when this overlay is active, displays a simple, generic star symbol (e.g., ★ or ☆) without further interactive detail.
 
 5.  **Interactivity in Qimen Dunjia Overlay Mode:**
-    *   When the "Overlay Qimen Dunjia Gates" mode is active, clicking on each of the 8 outer cells should update the information panel to display:
+    *   When the "Overlay Qimen Gates" mode is active, clicking on an outer cell updates the information panel to display, with clear visual separation (e.g., headings, horizontal rules) between sections:
         *   **All information from Ba Gua Mode (Spec 3)** for context.
-        *   **AND additional Qimen Gate Information:**
+        *   **AND additional Qimen Gate Information (clearly sectioned):**
             *   **Gate Name** (e.g., "开门 (Kai Men) - Open Gate").
-            *   **Original Palace & Derived Element:** "Originates from [Original Ba Gua Palace Name, e.g., 乾 (Qian) Palace]. Derived Elemental Nature: [Gate's Element, e.g., 金 (Metal)]."
-            *   A sentence describing the **general properties of the Gate** (e.g., "The Open Gate (开门) is generally auspicious for new beginnings, career, and ventures.").
+            *   **Original Palace & Derived Element:** "Originates from: [Original Ba Gua Palace Name, e.g., 乾 (Qian) Palace]. Derived Element: [Gate's intrinsic Element, e.g., 金 (Metal)]."
+            *   **General Gate Properties:** (e.g., "The Open Gate (开门) is generally auspicious for new beginnings...").
             *   **Conceptual Interaction Explanation (Setting Stage for Course):**
-                *   "In this foundational view, the [Gate Name] is shown in its home palace, the [Palace Name]. Here, its elemental nature ([Gate's Element]) is aligned with the palace's element ([Palace's Element]), representing its most fundamental state."
-                *   "The '水到奇成' course will teach how this Gate's energy dynamically changes and interacts when it moves to *other* palaces in a time-specific Qimen Dunjia chart. Unfavorable interactions or specific negative conditions (known as '四害 - Si Hai' or 'problem indicators') in those dynamic contexts are key to advanced analysis and will be covered in the course."
+                *   "Fundamental State: In this view, the [Gate Name] is in its home palace ([Palace Name]), where its element ([Gate's Element]) aligns with the palace's element ([Palace's Element])." (Ensure dynamic placeholders are correctly populated).
+                *   "Course Insight: The '水到奇成' course teaches how this Gate's energy dynamically changes when it moves to *other* palaces in a time-specific Qimen chart. Identifying unfavorable interactions or conditions ('四害 - Si Hai' / 'problem indicators') in those dynamic contexts is key and will be covered in the course."
 
-6.  **Static Informational Sections (Accessible, e.g., via links/buttons or as collapsible sections):**
-    *   **A. "About 五行 (Wu Xing - The Five Elements)":**
-        *   A clear, concise explanation of the Five Elements.
-        *   Visual diagrams illustrating:
-            *   The **Generating Cycle (相生 Xiangsheng)** with brief descriptions (e.g., "Wood feeds Fire...").
-            *   The **Controlling Cycle (相克 Xiangke)** with brief descriptions (e.g., "Fire melts Metal...").
-    *   **B. "About Directions, 罗盘 (Luopan), & 二十四山 (24 Mountains)":**
-        *   Explanation: "The Ba Gua provides 8 main directions (each 45 degrees). For greater precision in Feng Shui analysis, especially in the '水到奇成' methodology, these are subdivided into the 24 Mountains (二十四山)."
-        *   Explanation: "Each of the 8 Ba Gua directions (e.g., North) contains three 'Mountains' (e.g., North contains 壬 Ren, 子 Zi, 癸 Gui), each spanning approximately 15 degrees. This app allows you to explore these Mountains visually."
-        *   Explanation: "A specialized Feng Shui compass called a Luopan (罗盘) is essential for accurately determining which of these 24 Mountains a building faces (向 Xiang) or sits on (坐 Zuo)."
-        *   Explanation: "Understanding the precise Mountain is fundamental in the '水到奇成' course before overlaying a dynamic Qimen Dunjia chart for analysis and remedy."
-    *   **C. "About this App & Next Steps":**
-        *   Briefly explain that this app covers foundational concepts for the "水到奇成" course.
-        *   Mention that the course will expand on these by teaching how to interpret dynamic Qimen charts, identify "四害" (problem indicators), and apply this knowledge practically using the 24 Mountains.
+6.  **Static Informational Sections (Accessible, e.g., via clearly labeled buttons/links in a header/footer or as collapsible/expandable sections below the main content. Content must be translatable and well-formatted for readability. Collapsible sections must be keyboard accessible and their state clear):**
+    *   **A. "How to Use This App":** A brief, potentially dismissible, initial guide on click interactions, overlay toggles, and language switching.
+    *   **B. "About 五行 (Wu Xing - The Five Elements)":**
+        *   Concise explanation. Visual diagrams (SVG preferred for scalability, with appropriate `aria-label` or `<title>` elements for accessibility) for Generating (相生) and Controlling (相克) cycles with brief descriptions.
+    *   **C. "About Directions, 罗盘 (Luopan), & 二十四山 (24 Mountains)":**
+        *   Clear explanations of the 8 Ba Gua directions, subdivision into 24 Mountains (each ~15 degrees), the role of the Luopan, and the importance of precise Mountain identification.
+        *   Consider including a simple static visual (SVG preferred) showing how a Ba Gua direction is subdivided into its three mountains.
+    *   **D. "About this App & Next Steps for '水到奇成' Course":**
+        *   Briefly explains the app's purpose. Mentions the course covers dynamic Qimen charts, "四害" identification, and practical application with 24 Mountains.
+    *   **E. "Glossary of Terms":** A small section defining key Pinyin/Chinese terms used in the app (e.g., Ba Gua, Wu Xing, specific Gate/Palace names) to assist beginners. Key terms in other sections could link here.
 
-
-7.  **Feng Shui 二十四山 (24 Mountains) Overlay Mode**
-    *   **7.1. Activation Button:**
-        *   A clearly visible, separate button labeled "Overlay 24 Mountains (二十四山)" must be present.
-        *   This button should act as a toggle. When clicked (toggled on), the 24 Mountains overlay is applied. When clicked again (toggled off), it's removed.
-        *   This overlay can be active **independently** of the "Qimen Dunjia Gates" overlay or **in conjunction** with it.
-
-    *   **7.2. Visual Representation on the Grid (When 24 Mountains Overlay is Active):**
-        *   Each of the 8 outer Ba Gua cells will be **visually subdivided into three distinct, equal segments** (e.g., three horizontal strips or three vertical columns within the bounds of the original Ba Gua cell).
-        *   Each of these 24 segments will be clearly labeled with its **specific Mountain Name**. The names are:
-            *   **坎 (Kan) / North:** 壬 (Ren), 子 (Zi), 癸 (Gui)
-            *   **艮 (Gen) / Northeast:** 丑 (Chou), 艮 (Gen), 寅 (Yin)
-            *   **震 (Zhen) / East:** 甲 (Jia), 卯 (Mao), 乙 (Yi)
-            *   **巽 (Xun) / Southeast:** 辰 (Chen), 巽 (Xun), 巳 (Si)
-            *   **离 (Li) / South:** 丙 (Bing), 午 (Wu), 丁 (Ding)
-            *   **坤 (Kun) / Southwest:** 未 (Wei), 坤 (Kun), 申 (Shen)
-            *   **兑 (Dui) / West:** 庚 (Geng), 酉 (You), 辛 (Xin)
-            *   **乾 (Qian) / Northwest:** 戌 (Xu), 乾 (Qian), 亥 (Hai)
-            *(Labels should be concise enough to fit, perhaps with full names on hover/click if space is an issue, but direct labeling is preferred).*
-        *   The existing Ba Gua Trigram Symbol, Name, and Direction labels for the parent Ba Gua cell should remain visible, perhaps slightly repositioned or styled to accommodate the Mountain segments.
-        *   The Central Palace ("中宫") is not subdivided for the 24 Mountains.
-
-    *   **7.3. Interactivity with 24 Mountains Overlay Active:**
-        *   Users must be able to click on each of the **24 individual Mountain segments**.
-        *   Clicking on a Ba Gua cell's general area (if not directly on a Mountain segment, though clicking segments should be prioritized) would ideally show the parent Ba Gua cell's info as per Spec 3 (and Spec 5 if Qimen overlay is also active).
-        *   Upon clicking a **specific Mountain segment**, the designated information panel should appear/update, displaying the following attributes for the **selected Mountain**:
+7.  **Feng Shui 二十四山 (24 Mountains) Overlay Mode:**
+    *   **7.1. Activation Button:** A clearly visible, separate button labeled "Show 24 Mountains (二十四山)" (with English translation, changing to "Hide 24 Mountains" when active), with distinct visual states for "on" and "off". This overlay can be active independently or in conjunction with the Qimen Gates overlay.
+    *   **7.1.1. Overlay Indicator:** The UI must clearly indicate which overlays are active (e.g., persistent visual cues on toggle buttons, a small status area).
+    *   **7.2. Visual Representation on the Grid (24 Mountains Overlay Active):**
+        *   Each of the 8 outer Ba Gua cells is visually subdivided into three distinct, equal segments (e.g., using subtle internal borders).
+        *   Each of these 24 segments is clearly labeled with its **specific Mountain Name** (e.g., 壬 Ren, 子 Zi, 癸 Gui).
+            *   **Segment Ordering:** Follow standard Luopan convention for segment order within a palace (e.g., for Kan/North, viewed facing the grid: 壬 Ren (N3) on left, 子 Zi (N2) in middle, 癸 Gui (N1) on right).
+            *   **Legibility Strategy:** Use single Chinese characters for Mountain names on the grid (壬, 子, 癸). Full names and Pinyin will be in the info panel. Consider adjusting Ba Gua Trigram/Name size or position if needed. On hover over a Ba Gua cell (when 24 Mountains overlay is active), its three mountain segments could be visually highlighted.
+        *   Existing Ba Gua labels remain visible, styled for clarity alongside Mountain segments.
+        *   Central Palace is not subdivided.
+    *   **7.3. Interactivity with 24 Mountains Overlay Active (Clicking a Mountain Segment):**
+        *   The information panel, leading with Mountain-specific info, displays the following for the **selected Mountain** (all text translatable, clearly sectioned):
             *   **A. Mountain Name:** (e.g., "子 (Zi) Mountain").
             *   **B. Parent Ba Gua Palace:** "Belongs to: 坎 (Kan) Palace - 北 (North) Direction."
-            *   **C. Approximate Degree Range:** (e.g., "Approx. Degrees: 352.5° - 7.5°"). *This range data will need to be pre-defined for all 24 Mountains.*
-            *   **D. Element (Inherited):** "Primary Element: 水 (Water) - inherited from the 坎 (Kan) Palace. The '水到奇成' course will clarify if specific Mountain nuances apply." *This manages expectations about deeper elemental systems not covered foundationally.*
-            *   **E. Brief Feng Shui Implication/Use:** A very short, high-level sentence (e.g., "子 (Zi) Mountain: Represents the peak of Water energy, often associated with midnight, wisdom, and the direct North. Precise for determining house facing or sitting for specific Feng Shui audits.").
-            *   **F. Relevance to "水到奇成" Course:** "In the '水到奇成' course, accurately identifying the Facing or Sitting Mountain (e.g., Tử Mountain) of a property using a Luopan (罗盘) is a critical first step. This precise directional data is then used as the basis for overlaying and interpreting the Qimen Dunjia chart for that specific location and time."
+            *   **C. Approximate Degree Range:** (e.g., "Approx. Degrees: 352.5° - 7.5°"). *Degree data must be accurate based on standard Luopan conventions (internally document source/convention).*
+            *   **D. Inherited Element:** "Primary Element: 水 (Water) (from 坎 Kan Palace). Specific Mountain elemental nuances will be explored in the '水到奇成' course."
+            *   **E. Brief Feng Shui Implication:** (e.g., "子 (Zi) Mountain: Peak Water energy, direct North. Key for precise house orientation.").
+            *   **F. Relevance to "水到奇成" Course:** "Course Essential: Accurately identifying the Facing/Sitting Mountain (e.g., Zi Mountain) with a Luopan (罗盘) is a critical first step in '水到奇成' for overlaying and interpreting the Qimen Dunjia chart."
+    *   **7.4. Combined Overlay Interactivity (24 Mountains + Qimen Dunjia Gates Active - Clicking a Mountain Segment):**
+        *   The information panel presents a comprehensive, well-organized view, potentially using collapsible sub-sections for Ba Gua/Qimen info to manage density, especially on mobile. The Mountain info (7.3 A-F) should be visible by default.
+        *   **Information Hierarchy:**
+            1.  **All Mountain information (Spec 7.3 A-F).**
+            2.  **Parent Ba Gua Palace Information (briefly, for context).**
+            3.  **PLUS, clearly sectioned Qimen Gate information for the parent Ba Gua Palace:**
+                *   "Qimen Gate in this Sector: [Gate Name, e.g., 休门 (Xiu Men)] (occupying the [Parent Ba Gua Palace Name, e.g., 坎 (Kan) Palace] in this foundational view)."
+                *   The Gate's properties and conceptual interaction (Spec 5, adapted for this context).
 
-    *   **7.4. Combined Overlay Interactivity (24 Mountains + Qimen Dunjia Gates Active):**
-        *   If both the "Overlay 24 Mountains" and "Overlay Qimen Dunjia Gates" modes are active, clicking on a **specific Mountain segment** should ideally show a comprehensive view in the information panel:
-            *   **All information for the selected Mountain (Spec 7.3 A-F).**
-            *   **PLUS, the Qimen Gate information for the parent Ba Gua Palace:**
-                *   "Qimen Gate in this Sector: [Gate Name, e.g., 休门 (Xiu Men) - Rest Gate] (as it currently occupies the [Parent Ba Gua Palace Name, e.g., 坎 (Kan) Palace])."
-                *   The Gate's properties and conceptual interaction as per Spec 5.
-            *   *(This allows the user to conceptually see: "My house faces Zi Mountain, which is in the Kan Palace. In this Qimen chart (conceptualized by home palace gates here), the Xiu Men is in Kan. How does this all relate?").*
-        *   The goal is to help the user begin to associate a precise Mountain direction with the broader Qimen Gate energy occupying that sector.
+**Final Development Considerations:**
 
-
-The app must be fully responsive and function properly on both desktop and mobile and it supports Chinese (default) and English. Provide the code as a single, self-contained HTML document. All styles and scripts must be inline. In the result, encase the code between "```" and "```" for easy parsing.
+*   **Data Management:**
+    *   All translatable text, Ba Gua attributes, Gate details, Mountain details, degree ranges, etc., must be stored in well-structured JavaScript objects (e.g., a nested JSON-like structure within the JS code). This facilitates localization (switching between `content.zh.element` and `content.en.element`) and simplifies content updates and maintenance.
+    *   Example structure:
+        ```javascript
+        const appData = {
+          settings: { defaultLang: 'zh', currentLang: 'zh' },
+          content: {
+            zh: { appTitle: "后天八卦...", palaces: { kan: { name: "坎", trigram: "☵", ... } }, /* ... */ },
+            en: { appTitle: "Later Heaven Ba Gua...", palaces: { kan: { name: "Kan", trigram: "☵", ... } }, /* ... */ }
+          }
+        };
+        ```
+    *   Ensure all translated text grounded with Google Search.    
+*   **Initial State & Reset:**
+    *   The app should load in a defined initial state: Ba Gua mode active, Chinese (Simplified) language selected, no cell selected, info panel hidden.
+    *   Clicking an already selected cell/segment or clicking on a non-interactive area of the grid (if feasible) could deselect it and hide the info panel, acting as a "clear selection" mechanism.
+*   **Performance:** Ensure smooth interactions and quick loading times, given all code is inline. Optimize asset handling if SVGs become complex.
+*   **Accessibility (A11y):**
+    *   **Keyboard Navigation:** All interactive elements (grid cells/segments, buttons, language switcher, info panel close button, collapsible section toggles) must be focusable and operable via keyboard (e.g., using Tab for navigation, Enter/Space for activation).
+    *   **ARIA Attributes:** Use ARIA attributes appropriately: `aria-expanded` for collapsible sections, `aria-label` for icon-only buttons or ambiguous links, `aria-live="polite"` for the info panel content updates to inform screen readers of changes, `role="button"` for non-native button elements, etc.
+    *   **Semantic HTML:** Use semantic HTML elements where appropriate (e.g., `<nav>`, `<button>`, `<main>`, `<aside>`).
+    *   **Color Contrast:** Maintain sufficient color contrast for all text and UI elements as per WCAG AA guidelines.
+    *   **Trigram Symbols:** If Trigram symbols (☰, ☵, etc.) are Unicode text characters, test how they are announced by screen readers. If they are SVGs or images, they must have appropriate alt text or `aria-label`.
+*   **Code Clarity:** Inline code should still be well-structured, commented, and organized (e.g., functions for rendering UI, handling interactions, managing state, and localization) for maintainability.
+*   **Error Handling (Conceptual):** While complex error handling isn't expected, ensure the app is robust and does not break from typical user interactions. Defensive coding for data lookups (e.g., from the content object) is advisable.
+*   **Testing:**
+    *   Thoroughly test across common modern browsers (Chrome, Firefox, Safari, Edge).
+    *   Test on a range of physical device screen sizes or using browser developer tools to emulate mobile, tablet, and desktop views.
+    *   Test localization switching thoroughly, ensuring all text elements update correctly.
+    *   Perform basic accessibility checks (e.g., keyboard navigation, screen reader output for key elements).
