@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>奇门遁甲词汇</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .app-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+        #main-title {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 25px;
+        }
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 10px;
+        }
+        #search-input {
+            flex-grow: 1;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            min-width: 200px; 
+        }
+        .language-switcher button {
+            padding: 10px 15px;
+            margin-left: 8px;
+            border: none;
+            background-color: #3498db;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+        }
+        .language-switcher button:hover {
+            background-color: #2980b9;
+        }
+        .language-switcher button.active {
+            background-color: #1abc9c;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .flashcard {
+            background-color: #ecf0f1;
+            border: 1px solid #bdc3c7;
+            border-radius: 6px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            word-wrap: break-word; /* Ensure long words don't overflow */
+        }
+        .flashcard-term {
+            font-weight: bold;
+            color: #2980b9;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+        .flashcard-definition {
+            font-size: 0.95em;
+            color: #555;
+        }
+
+        @media (max-width: 768px) {
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            #search-input {
+                width: calc(100% - 24px); /* Adjust for padding */
+                margin-bottom: 10px;
+            }
+            .language-switcher {
+                display: flex;
+                justify-content: center;
+                width: 100%;
+            }
+            .language-switcher button {
+                flex-grow: 1;
+                margin: 0 5px; 
+            }
+            .grid-container {
+                grid-template-columns: 1fr; 
+            }
+        }
+        @media (max-width: 480px) {
+            .language-switcher button {
+                font-size: 13px;
+                padding: 8px 10px;
+            }
+             #main-title {
+                font-size: 1.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <h1 id="main-title">奇门遁甲词汇</h1>
+        <div class="controls">
+            <input type="text" id="search-input" placeholder="搜索词汇...">
+            <div class="language-switcher">
+                <button id="lang-zh" class="active">中文</button>
+                <button id="lang-en">English</button>
+            </div>
+        </div>
+        <div id="flashcard-grid" class="grid-container">
+            <!-- Flashcards will be injected here by JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        const qimenTerms = [
+            {
+                id: 1,
+                term_zh: "六十花甲子",
+                definition_zh: "十天干与十二地支共配六次，形成的周而复始的纪时符号。古代中国以此来记载年、月、日、时。",
+                term_en: "Sexagenary Cycle (Liu Shi Hua Jia Zi)",
+                definition_en: "The sixty combinations formed by pairing the ten Heavenly Stems and twelve Earthly Branches six times, creating a cyclical time-keeping system. Ancient China used this to record years, months, days, and hours."
+            },
+            {
+                id: 2,
+                term_zh: "旬空",
+                definition_zh: "在六十甲子周中，每一甲都剩下二个地支轮空。",
+                term_en: "Decan Void (Xun Kong)",
+                definition_en: "In the sexagenary cycle, within each decan (a group of 10 Stem-Branch pairs starting with Jia), two Earthly Branches are left out or 'void'."
+            },
+            {
+                id: 3,
+                term_zh: "甲辰旬中寅卯空",
+                definition_zh: "在甲辰这一旬中，寅和卯两个地支逢空。",
+                term_en: "Yin and Mao are Void in Jia Chen Decan",
+                definition_en: "In the Jia Chen decan, the Yin (Tiger) and Mao (Rabbit) Earthly Branches are void."
+            },
+            {
+                id: 4,
+                term_zh: "甲寅旬中子丑空",
+                definition_zh: "在甲寅这一旬中，子和丑两个地支逢空。",
+                term_en: "Zi and Chou are Void in Jia Yin Decan",
+                definition_en: "In the Jia Yin decan, the Zi (Rat) and Chou (Ox) Earthly Branches are void."
+            },
+            {
+                id: 5,
+                term_zh: "六甲旬空",
+                definition_zh: "六十甲子共配六次，形成的六个甲（六甲）中都有地支轮空。",
+                term_en: "Six Jia Decan Voids",
+                definition_en: "In the sexagenary cycle, each of the six Jia-decan series has two Earthly Branches that are void."
+            },
+            {
+                id: 6,
+                term_zh: "十天干",
+                definition_zh: "甲、乙、丙、丁、戊、己、庚、辛、壬、癸，是记时符号，也具有阴阳五行属性。",
+                term_en: "Ten Heavenly Stems (Shi Tian Gan)",
+                definition_en: "Jia, Yi, Bing, Ding, Wu, Ji, Geng, Xin, Ren, Gui; these are time-keeping symbols that also possess Yin-Yang and Five Element attributes."
+            },
+            {
+                id: 7,
+                term_zh: "阴阳五行属性",
+                definition_zh: "古人根据阴阳五行的哲学观，赋予十天干不同的阴阳五行属性，如甲为阳木，乙为阴木等。",
+                term_en: "Yin-Yang and Five Elements Attributes",
+                definition_en: "Ancient people, based on the philosophy of Yin-Yang and Five Elements, assigned different Yin-Yang and Five Element attributes to the Ten Heavenly Stems, such as Jia being Yang Wood, Yi being Yin Wood, etc."
+            },
+            {
+                id: 8,
+                term_zh: "奇门遁甲",
+                definition_zh: "中国传统预测学中的一种，全称“奇门遁甲”，简称“奇门”或“遁甲”。它将六十甲子纳入九宫格这个时空模型之中，来模拟时间的自然流动。源于军事上的排兵布阵。",
+                term_en: "Qimen Dunjia (Mysterious Gates Escaping Techniques)",
+                definition_en: "A form of traditional Chinese divination, fully named \"Qimen Dunjia,\" and often shortened to \"Qimen\" or \"Dunjia.\" It incorporates the Sexagenary Cycle into a Nine Palaces grid, a spatio-temporal model, to simulate the natural flow of time. It originated from military strategy and troop deployment."
+            },
+            {
+                id: 9,
+                term_zh: "九宫格",
+                definition_zh: "奇门遁甲中用来纳入六十甲子和模拟时空的模型。代表“地”。",
+                term_en: "Nine Palaces Grid (Jiu Gong Ge)",
+                definition_en: "The model used in Qimen Dunjia to incorporate the Sexagenary Cycle and simulate spacetime. It represents the \"Earth\" plate."
+            },
+            {
+                id: 10,
+                term_zh: "九遁",
+                definition_zh: "奇门遁甲中的九个吉格，包括云遁、龙遁、虎遁、神遁、鬼遁等。",
+                term_en: "Nine Escapes (Jiu Dun)",
+                definition_en: "Nine auspicious formations in Qimen Dunjia, including Cloud Escape, Dragon Escape, Tiger Escape, Spirit Escape, Ghost Escape, etc."
+            },
+            {
+                id: 11,
+                term_zh: "云遁",
+                definition_zh: "天盘乙奇落艮8宫，或乙奇与六辛同宫，得开休生三吉门之一则成云遁吉格。这一方位可以求雨、立营寨等。",
+                term_en: "Cloud Escape (Yun Dun)",
+                definition_en: "When the Heaven Plate Yi Noble lands in Gen 8 Palace, or Yi Noble is in the same palace as Liu Xin, and one of the three auspicious doors (Open, Rest, Life) is present, it forms the Cloud Escape auspicious formation. This direction is favorable for praying for rain, setting up camps, etc."
+            },
+            {
+                id: 12,
+                term_zh: "龙遁",
+                definition_zh: "天盘乙奇落坎1宫，或乙/癸日奇入地网凶格，得开休生三吉门之一则为龙遁。这一方位可以演练水军、修桥穿井等。",
+                term_en: "Dragon Escape (Long Dun)",
+                definition_en: "When the Heaven Plate Yi Noble lands in Kan 1 Palace, or on an Yi/Gui day the Noble enters the inauspicious Earth Net formation, and one of the three auspicious doors (Open, Rest, Life) is present, it forms the Dragon Escape. This direction is favorable for naval exercises, repairing bridges, digging wells, etc."
+            },
+            {
+                id: 13,
+                term_zh: "虎遁",
+                definition_zh: "乙/辛入艮宫，合休门或生门；或者天盘庚逢开门入兑宫，均称为虎遁。这一方位可以安营扎寨、建筑修造等。",
+                term_en: "Tiger Escape (Hu Dun)",
+                definition_en: "When Yi or Xin enters Gen Palace with Rest Door or Life Door; or when Heaven Plate Geng encounters Open Door entering Dui Palace, it is called Tiger Escape. This direction is favorable for setting up camps, construction, etc."
+            },
+            {
+                id: 14,
+                term_zh: "神遁",
+                definition_zh: "天盘丙奇，门盘生门，神盘九天，三者到同一个宫则为神遁。这一方位可以祭祀祈神、建坛点将等。",
+                term_en: "Spirit Escape (Shen Dun)",
+                definition_en: "When Heaven Plate Bing Noble, Door Plate Life Door, and Spirit Plate Nine Heavens all arrive in the same palace, it forms the Spirit Escape. This direction is favorable for offering sacrifices, praying to spirits, building altars, appointing generals, etc."
+            },
+            {
+                id: 15,
+                term_zh: "鬼遁",
+                definition_zh: "丁奇、杜门、九地三者到一个宫，或丁奇、开门、九地三者到一个宫名为鬼遁。这一方位适宜偷营劫寨、设伏攻虚、禳镇灾邪、超度亡灵。",
+                term_en: "Ghost Escape (Gui Dun)",
+                definition_en: "When Ding Noble, Delusion Door, and Nine Earths arrive in the same palace, or Ding Noble, Open Door, and Nine Earths arrive in the same palace, it is called Ghost Escape. This direction is suitable for raiding camps, setting ambushes, dispelling calamities, and appeasing spirits of the deceased."
+            },
+            {
+                id: 16,
+                term_zh: "三奇得使",
+                definition_zh: "乙、丙、丁三奇在天盘，地盘六仪如何，只要门盘是值使门，就为“三奇得使”。天地盘主客形成吉格，又值使门为吉门，则大吉大利。",
+                term_en: "Three Nobles Gaining Emissary (San Qi De Shi)",
+                definition_en: "When the Three Nobles (Yi, Bing, Ding) are on the Heaven Plate, regardless of the Six Instruments on the Earth Plate, if the Door Plate contains the Emissary Door, it is \"Three Nobles Gaining Emissary.\" If the Heaven and Earth plates form an auspicious guest-host configuration and the Emissary Door is an auspicious door, it signifies great fortune."
+            },
+            {
+                id: 17,
+                term_zh: "玉女守门",
+                definition_zh: "值使门所落之宫，正遇地盘丁奇。此格利于宴会、婚姻等喜乐之事。",
+                term_en: "Jade Maiden Guarding the Door (Yu Nü Shou Men)",
+                definition_en: "The palace where the Emissary Door lands coincides with the Earth Plate Ding Noble. This formation is favorable for joyful events such as banquets and marriages."
+            },
+            {
+                id: 18,
+                term_zh: "三奇贵人升殿",
+                definition_zh: "乙奇到3宫（乙卯正殿）。",
+                term_en: "Three Nobles Ascending the Palace Hall",
+                definition_en: "Yi Noble arriving at Palace 3 (Yi in Mao, its 'thriving' palace, is an example). Generally, when one of the Three Nobles (Yi, Bing, Ding) arrives at its respective 'thriving' or 'imperial prosperity' palace."
+            },
+            {
+                id: 19,
+                term_zh: "门克宫",
+                definition_zh: "八门所临的宫受到门五行的克制。吉门克宫则吉事不就，凶门克宫则事情更凶。",
+                term_en: "Door Controls Palace",
+                definition_en: "The palace where one of the Eight Doors resides is controlled (clashed) by the Door's Five Element. If an auspicious Door controls the palace, auspicious matters may not succeed; if an inauspicious Door controls the palace, matters become even more inauspicious."
+            },
+            {
+                id: 20,
+                term_zh: "宫克门 / 制",
+                definition_zh: "八门受到地盘宫五行的制约。吉门受克吉不就，凶门受克凶不起。",
+                term_en: "Palace Controls Door / Restraint",
+                definition_en: "The Eight Doors are restrained by the Five Element of the Earth Plate palace they reside in. If an auspicious Door is controlled, auspiciousness doesn't manifest; if an inauspicious Door is controlled, its inauspiciousness cannot arise strongly."
+            },
+            {
+                id: 21,
+                term_zh: "门生宫 / 和",
+                definition_zh: "八门五行生地盘宫五行。对吉门为好，对凶门则凶上加凶。",
+                term_en: "Door Produces Palace / Harmony",
+                definition_en: "The Five Element of the Eight Doors produces the Five Element of the Earth Plate palace. This is good for auspicious Doors, but for inauspicious Doors, it intensifies the inauspiciousness."
+            },
+            {
+                id: 22,
+                term_zh: "宫生门 / 义",
+                definition_zh: "地盘宫五行生八门五行。对吉门为好，对凶门则凶上加凶。",
+                term_en: "Palace Produces Door / Righteousness",
+                definition_en: "The Five Element of the Earth Plate palace produces the Five Element of the Eight Doors. This is good for auspicious Doors, but for inauspicious Doors, it intensifies the inauspiciousness."
+            },
+            {
+                id: 23,
+                term_zh: "旺衰休囚",
+                definition_zh: "门与宫在不同月令下的状态，用于分辨其力量大小。",
+                term_en: "Prosperous, Weak, Resting, Imprisoned (Wang Shuai Xiu Qiu)",
+                definition_en: "The states of Doors and Palaces under different monthly commands (seasonal influences), used to discern their strength. (Prosperous, Weak, Resting, Imprisoned, Dead are the full five states)."
+            },
+            {
+                id: 24,
+                term_zh: "悖格",
+                definition_zh: "丙加六甲值符，或六甲值符加丙，或丙加年、月、日、时之上。指违背常理，易偏激过火，把事情搞乱。",
+                term_en: "Contrary Formation (Bei Ge)",
+                definition_en: "Bing Stem over the Chief (Six Jia Leader), or the Chief over Bing Stem, or Bing Stem over the Year, Month, Day, or Hour Stem. It indicates going against common sense, a tendency towards extremism, and messing things up."
+            },
+            {
+                id: 25,
+                term_zh: "伏吟",
+                definition_zh: "九星、八门均在原宫不动或又转回本宫。时间上主慢、迟，空间上主近、本地、内部。一般不吉，不宜动。利于主方（如体育竞赛中主方多赢）。",
+                term_en: "Fu Yin (Static Chant / Moaning)",
+                definition_en: "The Nine Stars and Eight Doors remain in their original palaces or return to their home palaces. In terms of time, it indicates slowness, delay; in space, it indicates proximity, local, internal. Generally inauspicious and not suitable for action. Favorable to the host side (e.g., the home team is more likely to win in sports)."
+            },
+            {
+                id: 26,
+                term_zh: "反吟",
+                definition_zh: "九星、八门落到与它原来所在宫相对冲的宫中。时间上主快、速，空间上主远、外地、外部。一般不吉。",
+                term_en: "Fan Yin (Reverse Chant / Groaning)",
+                definition_en: "The Nine Stars and Eight Doors fall into palaces that are opposite (clashing with) their original palaces. In terms of time, it indicates speed, quickness; in space, it indicates distance, remote, external. Generally inauspicious."
+            },
+            {
+                id: 27,
+                term_zh: "天显时格",
+                definition_zh: "六甲之时，即使星门伏吟，也变为天显时格，可以行动。",
+                term_en: "Heaven Manifesting Time Formation (Tian Xian Shi Ge)",
+                definition_en: "During the hour of a Jia Stem (Six Jia), even if Stars and Doors are in Fu Yin, it transforms into the Heaven Manifesting Time Formation, and action can be taken."
+            },
+            {
+                id: 28,
+                term_zh: "六仪",
+                definition_zh: "甲子戊、甲戌己、甲申庚、甲午辛、甲辰壬、甲寅癸，六个甲遁藏在戊己庚辛壬癸之下，故称六仪。",
+                term_en: "Six Instruments (Liu Yi)",
+                definition_en: "Jia Zi Wu, Jia Xu Ji, Jia Shen Geng, Jia Wu Xin, Jia Chen Ren, Jia Yin Gui. The six Jia Stems are hidden beneath Wu, Ji, Geng, Xin, Ren, Gui, hence they are called the Six Instruments."
+            },
+            {
+                id: 29,
+                term_zh: "辛",
+                definition_zh: "六仪之一，有时代表罪人或有错误的人。天盘六辛加地盘乙奇是白虎猖狂凶格。",
+                term_en: "Xin (Heavenly Stem)",
+                definition_en: "One of the Six Instruments. Sometimes represents a sinner or someone who has made a mistake. Heaven Plate Xin over Earth Plate Yi Noble is the \"White Tiger Rampant\" (Bai Hu Chang Kuang) inauspicious formation."
+            },
+            {
+                id: 30,
+                term_zh: "丁",
+                definition_zh: "三奇之一，有时代表第三者女人。天盘丁奇加地盘六癸是朱雀投江凶格。地盘丁奇可遇值使门成玉女守门吉格。",
+                term_en: "Ding (Heavenly Stem / Noble)",
+                definition_en: "One of the Three Nobles. Sometimes represents a third-party woman. Heaven Plate Ding Noble over Earth Plate Gui is the \"Vermilion Bird Entering the River\" (Zhu Que Tou Jiang) inauspicious formation. Earth Plate Ding Noble meeting the Emissary Door can form the \"Jade Maiden Guarding the Door\" auspicious formation."
+            },
+            {
+                id: 31,
+                term_zh: "狱神得奇",
+                definition_zh: "六仪辛下临丁（辛+丁）格局，说明虽然有错误，但不会被弹劾，或囚人获释。",
+                term_en: "Prison God Gains Noble (Yu Shen De Qi)",
+                definition_en: "The formation of Six Instrument Xin over Ding Noble (Xin + Ding). It indicates that although there are mistakes, one will not be impeached, or a prisoner will be released."
+            },
+            {
+                id: 32,
+                term_zh: "惊门",
+                definition_zh: "八门之一，五行属金。为讼神，代表诉讼。主惊恐怪异、破坏毁折。在预测中可以表示震惊。",
+                term_en: "Fear Door (Jing Men)",
+                definition_en: "One of the Eight Doors, with the Metal element. It is the \"litigation spirit\" and represents lawsuits. It governs fear, strange occurrences, destruction, and damage. In divination, it can indicate shock."
+            },
+            {
+                id: 33,
+                term_zh: "开门",
+                definition_zh: "八门之一，五行属金。代表议会、弹劾机关，也代表总统职位、手术、店铺贸易、工作事业、法官、飞机。",
+                term_en: "Open Door (Kai Men)",
+                definition_en: "One of the Eight Doors, with the Metal element. Represents parliaments, impeachment bodies, presidential positions, surgery, shop trade, career, judges, and airplanes."
+            },
+            {
+                id: 34,
+                term_zh: "天心星",
+                definition_zh: "九星之一，大吉之星。五行属金。与乾卦对应，长于心计、领导才能、军事指挥、医疗治病有关。有时代表欠债人。",
+                term_en: "Heaven Heart Star (Tian Xin Xing)",
+                definition_en: "One of the Nine Stars, a very auspicious star. Its element is Metal. Corresponds to the Qian trigram and is associated with strategic thinking, leadership, military command, and medical treatment. Sometimes represents a debtor."
+            },
+            {
+                id: 35,
+                term_zh: "移荡格",
+                definition_zh: "六仪庚加壬（庚+壬）格局。",
+                term_en: "Moving Ripples Formation (Yi Dang Ge)",
+                definition_en: "The formation of Six Instrument Geng over Ren (Geng + Ren). Often associated with movement, travel, or instability."
+            },
+            {
+                id: 36,
+                term_zh: "六合",
+                definition_zh: "八神之一，吉神。代表证据，也说明不是一个国家，有多国参与。测婚姻时代表婚姻本身，也代表同行人。",
+                term_en: "Six Harmonies (Liu He Spirit)",
+                definition_en: "One of the Eight Spirits, an auspicious spirit. Represents evidence, agreements, and can also indicate involvement of multiple parties or countries. In marriage divination, it represents the marriage itself or companions."
+            },
+            {
+                id: 37,
+                term_zh: "空亡 / 逢空",
+                definition_zh: "某地支在旬中轮空，该宫逢空亡。遇空亡时，凶的程度会减轻。好事可能落空。行人走失遇空亡是出走之象。",
+                term_en: "Emptiness / Encountering Emptiness (Kong Wang / Feng Kong)",
+                definition_en: "An Earthly Branch is void within its decan, and the palace it corresponds to encounters emptiness. When emptiness is encountered, the severity of inauspicious events may be reduced. Good things might fail to materialize. For a missing person, encountering emptiness signifies elopement or having run away."
+            },
+            {
+                id: 38,
+                term_zh: "庚",
+                definition_zh: "六仪之一。五行属金。天盘六庚加地盘丙奇是太白入荧凶格。天盘六庚加地盘六癸是大格凶格。天盘六庚加地盘日干是日格/伏干格凶格。天盘六庚加地盘时干是时格凶格。在预测军事时常作为客方、攻方。也代表阻隔不通。在预测婚姻时可代表男方、丈夫。",
+                term_en: "Geng (Heavenly Stem)",
+                definition_en: "One of the Six Instruments. Its element is Metal. Heaven Plate Geng over Earth Plate Bing Noble is the \"Great White (Venus) Enters Sparkling Light (Mars)\" (Tai Bai Ru Ying) inauspicious formation. Heaven Plate Geng over Earth Plate Gui is the \"Great Formation\" (Da Ge) inauspicious formation. Heaven Plate Geng over Earth Plate Day Stem is the \"Day Formation\" / \"Hidden Stem Formation\" (Ri Ge / Fu Gan Ge) inauspicious formation. Heaven Plate Geng over Earth Plate Hour Stem is the \"Hour Formation\" (Shi Ge) inauspicious formation. In military predictions, it often represents the guest/attacker. It also represents obstruction. In marriage predictions, it can represent the male partner/husband."
+            },
+            {
+                id: 39,
+                term_zh: "六仪击刑",
+                definition_zh: "天盘值符加地盘与值符相刑的宫。极凶，即使六仪为值符也不可用。一动必有灾伤。",
+                term_en: "Six Instruments Striking Punishment (Liu Yi Ji Xing)",
+                definition_en: "The Heaven Plate Chief (Zhi Fu, representing a hidden Jia stem) is over an Earth Plate palace that forms a punishment relationship with the Chief's Earthly Branch. Extremely inauspicious; even if the Six Instrument is the Chief, it should not be used. Action will inevitably lead to disaster or injury."
+            },
+            {
+                id: 40,
+                term_zh: "战格",
+                definition_zh: "庚加庚格局。凶格。",
+                term_en: "Battle Formation (Zhan Ge)",
+                definition_en: "The formation of Geng over Geng. An inauspicious formation, often indicating conflict or struggle."
+            },
+            {
+                id: 41,
+                term_zh: "死门",
+                definition_zh: "八门之一，五行属土。大凶。与天芮星同宫时常主肿瘤等疾病。也代表灭亡。在预测中主伤灾。",
+                term_en: "Death Door (Si Men)",
+                definition_en: "One of the Eight Doors, with the Earth element. Very inauspicious. When in the same palace as Tian Rui Star (Illness Star), it often indicates diseases like tumors. Also represents annihilation. In divination, it signifies injury or disaster."
+            },
+            {
+                id: 42,
+                term_zh: "值符",
+                definition_zh: "八神之一，吉神。遁甲元帅。天盘值符加地盘与值符相刑的宫是六仪击刑凶格。代表克林顿（国家元首）、南斯拉夫（守方）、监考官、领导、伊拉克（守方）。代表“天时”。",
+                term_en: "Chief (Zhi Fu Spirit)",
+                definition_en: "One of the Eight Spirits, an auspicious spirit. The Marshal of Dunjia. (The hidden Jia stem of the current hour's pillar). Heaven Plate Chief over an Earth Plate palace that punishes the Chief's branch is the \"Six Instruments Striking Punishment\" inauspicious formation. Can represent leaders, important persons, or the primary subject. Represents \"Heavenly Timing.\""
+            },
+            {
+                id: 43,
+                term_zh: "天柱星",
+                definition_zh: "九星之一，凶星。五行属金。与西方七宫兑卦对应。喜杀好战，与惊恐怪异、破坏毁折有关。有时代表能征善战。",
+                term_en: "Heaven Pillar Star (Tian Zhu Xing)",
+                definition_en: "One of the Nine Stars, an inauspicious star. Its element is Metal. Corresponds to the Dui trigram in the West (Palace 7). Likes killing and warfare, associated with fear, strange occurrences, destruction. Sometimes represents being skilled in battle or sharp speech."
+            },
+            {
+                id: 44,
+                term_zh: "己",
+                definition_zh: "六仪之一。有时代表南斯拉夫（时干）。也代表命主（日干）。",
+                term_en: "Ji (Heavenly Stem)",
+                definition_en: "One of the Six Instruments. Its element is Earth. Sometimes used as a representative element, e.g., representing a subject based on Hour Stem or the querent as Day Stem."
+            },
+            {
+                id: 45,
+                term_zh: "地户逢鬼",
+                definition_zh: "己加己格局。凶格，必然破财伤人，损失惨重。有时会有小人捣鬼，遭坏人暗算。",
+                term_en: "Earth Door Meets Ghost (Di Hu Feng Gui) / Ji + Ji",
+                definition_en: "The formation of Ji over Ji, also known as 'Di Hu Feng Gui' or 'Mound of Dirt'. An inauspicious formation, often indicating financial loss, harm to people, severe losses, or schemes by petty individuals."
+            },
+            {
+                id: 46,
+                term_zh: "伤门",
+                definition_zh: "八门之一，五行属木。主争斗、不服输、受创伤。在预测中可代表车，也可代表船只，或讨债人。",
+                term_en: "Harm Door (Shang Men)",
+                definition_en: "One of the Eight Doors, with the Wood element. Governs conflict, competitiveness, receiving injuries, hunting, and debt collection. In divination, it can represent vehicles or boats."
+            },
+            {
+                id: 47,
+                term_zh: "九天",
+                definition_zh: "八神之一。吉神。主野心大、想称霸世界。上乘九天好扬兵。代表远行、远途。在物品中主圆状物。",
+                term_en: "Nine Heavens (Jiu Tian Spirit)",
+                definition_en: "One of the Eight Spirits. An auspicious spirit. Signifies great ambition, high aspirations, and dynamic action. 'Riding the Nine Heavens is good for displaying military might.' Represents long journeys, heights, and aviation. For objects, it can signify round or flying items."
+            },
+            {
+                id: 48,
+                term_zh: "人库",
+                definition_zh: "天干或地支落入库地。逢人库则野心可能落空。时干或地支入库，有时表示被关押。",
+                term_en: "Entering Tomb/Storage (Ru Ku)",
+                definition_en: "A Heavenly Stem or Earthly Branch falls into its 'tomb' or 'storage' palace (based on the 12 growth phases). Encountering this can mean ambitions fail, or things are hidden or stuck. If the Hour Stem or a key Earthly Branch enters the tomb, it can sometimes indicate restriction or imprisonment."
+            },
+            {
+                id: 49,
+                term_zh: "天网四张",
+                definition_zh: "癸加癸格局。凶格，必然落空，或被捕捉，有牢狱之灾。",
+                term_en: "Heaven's Net Spreading Fourfold (Tian Wang Si Zhang) / Gui + Gui",
+                definition_en: "The formation of Gui over Gui. An inauspicious formation, indicating being trapped, plans failing, being captured, or facing imprisonment. 'Heaven's Net is cast wide, difficult to escape.'"
+            },
+            {
+                id: 50,
+                term_zh: "年干",
+                definition_zh: "出生年份的天干，有时可作为用神代表特定的事物，如联合国。",
+                term_en: "Year Stem (Nian Gan)",
+                definition_en: "The Heavenly Stem of the birth year, or the current year. Sometimes used as a 'Useful God' (representing element) to signify elders, superiors, or large institutions like the United Nations in specific contexts."
+            },
+            {
+                id: 51,
+                term_zh: "庚落宫生值符宫",
+                definition_zh: "代表攻方的庚所在宫的五行生代表守方的值符所在宫的五行。",
+                term_en: "Geng's Palace producing Chief's Palace",
+                definition_en: "The Five Element of the palace where Geng (often representing the attacker) resides produces the Five Element of the palace where the Chief (Zhi Fu, often representing the defender) resides. This is generally favorable for the attacker."
+            },
+            {
+                id: 52,
+                term_zh: "日干宫生时干宫",
+                definition_zh: "代表求测者本人的日干所在宫的五行生所问之事时干所在宫的五行。",
+                term_en: "Day Stem's Palace producing Hour Stem's Palace",
+                definition_en: "The Five Element of the palace where the Day Stem (representing the querent) resides produces the Five Element of the palace where the Hour Stem (representing the subject matter) resides. This suggests the querent can achieve the matter."
+            },
+            {
+                id: 53,
+                term_zh: "日干",
+                definition_zh: "求测者本人。有时作为预测体育竞赛中主队的用神。",
+                term_en: "Day Stem (Ri Gan)",
+                definition_en: "Represents the querent (the person asking the question). Sometimes used as the representing element for the home team in sports predictions."
+            },
+            {
+                id: 54,
+                term_zh: "时干",
+                definition_zh: "所问之事。有时代表儿子、选民/选票、摸奖人、商位。有时作为预测体育竞赛中主队或客队的用神。",
+                term_en: "Hour Stem (Shi Gan)",
+                definition_en: "Represents the subject matter being asked about. Can also represent children, voters/ballots, someone drawing lots, or a business location. Sometimes used for the home or away team in sports."
+            },
+            {
+                id: 55,
+                term_zh: "月干",
+                definition_zh: "出生月份的天干，有时可作为用神。",
+                term_en: "Month Stem (Yue Gan)",
+                definition_en: "The Heavenly Stem of the birth month, or the current month. Can be used as a representing element for peers, siblings, or colleagues."
+            },
+            {
+                id: 56,
+                term_zh: "年命",
+                definition_zh: "出生年的干支纳音或年命卦，在预测中常作为求测者本人的用神。",
+                term_en: "Year Life (Nian Ming)",
+                definition_en: "The Na Yin (melodic element) of the birth year's Stem-Branch, or the Life Gua (Ming Gua) derived from the birth year. Often used as a representing element for the querent, especially for long-term outlooks."
+            },
+            {
+                id: 57,
+                term_zh: "临官禄地",
+                definition_zh: "八字或奇门中地支的一种状态，表示旺盛、有利的地位。",
+                term_en: "Arrival at Officer (Lin Guan) / Prosperity (Lu) Stage",
+                definition_en: "A state of an Earthly Branch in BaZi or Qimen (one of the 12 Growth Phases of Qi), indicating a prosperous, favorable, and official status or peak vitality."
+            },
+            {
+                id: 58,
+                term_zh: "玄武",
+                definition_zh: "八神之一。凶神。主虚假、变化。有时主盗窃或被人拐骗。",
+                term_en: "Black Tortoise / Dark Warrior (Xuan Wu Spirit)",
+                definition_en: "One of the Eight Spirits. An inauspicious spirit. Governs deceit, illusion, ambiguity, and hidden matters. Sometimes indicates theft or being swindled."
+            },
+            {
+                id: 59,
+                term_zh: "青龙折足",
+                definition_zh: "戊加辛格局。凶格。",
+                term_en: "Green Dragon Broken Foot (Qing Long Zhe Zu) / Wu + Xin",
+                definition_en: "The formation of Wu over Xin. An inauspicious formation, suggesting setbacks, obstacles, or financial loss. 'The dragon is powerful but its foot is broken, limiting movement.'"
+            },
+            {
+                id: 60,
+                term_zh: "天芮星",
+                definition_zh: "九星之一，凶星、病星。五行属土。奇门预测疾病一般以它为用神。",
+                term_en: "Heaven Rui Star (Tian Rui Xing)",
+                definition_en: "One of the Nine Stars, an inauspicious star, also known as the Illness Star. Its element is Earth. In Qimen illness divination, it is generally the primary representing element for sickness."
+            },
+            {
+                id: 61,
+                term_zh: "乙奇",
+                definition_zh: "三奇之一，五行属木。可代表医药、本人年命、妻子、离婚证书。",
+                term_en: "Yi Noble (Yi Qi)",
+                definition_en: "One of the Three Nobles (San Qi), Heavenly Stem Yi. Its element is Wood. Can represent medicine, the querent's natal destiny (Nian Ming if Yi), wife, or documents like divorce certificates."
+            },
+            {
+                id: 62,
+                term_zh: "离九宫",
+                definition_zh: "九宫之一，五行属火。在人体中代表头部、眼目。",
+                term_en: "Li 9 Palace",
+                definition_en: "One of the Nine Palaces, associated with the South and the Fire element. In the human body, it represents the head and eyes."
+            },
+            {
+                id: 63,
+                term_zh: "天英星",
+                definition_zh: "九星之一，中平。五行属火。与离九宫对应。与文化教育有关。",
+                term_en: "Heaven Hero Star (Tian Ying Xing)",
+                definition_en: "One of the Nine Stars, considered neutral or slightly fierce. Its element is Fire. Corresponds to the Li 9 Palace. Associated with culture, education, and fiery temperament."
+            },
+            {
+                id: 64,
+                term_zh: "白虎",
+                definition_zh: "八神之一。凶神。主头脑胀痛。主公安、公检法。主伤灾、车祸。",
+                term_en: "White Tiger (Bai Hu Spirit)",
+                definition_en: "One of the Eight Spirits. An inauspicious spirit. Can indicate headaches or head distension. Governs police, law enforcement, justice system. Signifies injuries, accidents, or conflict."
+            },
+            {
+                id: 65,
+                term_zh: "乾宫",
+                definition_zh: "九宫之一，五行属金。代表头部。代表西北方、京都、大城市、寺观等。",
+                term_en: "Qian Palace (Qian Gong)",
+                definition_en: "One of the Nine Palaces (Palace 6), associated with the Northwest and the Metal element. Represents the head. Also signifies the northwest direction, capitals, large cities, temples, etc."
+            },
+            {
+                id: 66,
+                term_zh: "丁加丁星奇人太阴吉格",
+                definition_zh: "丁加丁格局，吉格。",
+                term_en: "Ding plus Ding, Star Noble meets Great Yin, Auspicious Formation (Ding + Ding)",
+                definition_en: "The formation of Ding over Ding, known as 'Star Noble Repeated' (星奇复讲) or 'Star Noble Enters Great Yin' (星奇入太阴). An auspicious formation, good for documents, plans, and scholarly pursuits."
+            },
+            {
+                id: 67,
+                term_zh: "腾蛇",
+                definition_zh: "八神之一。主虚幻不实。主变化、虚惊不宁。",
+                term_en: "Soaring Serpent (Teng She Spirit)",
+                definition_en: "One of the Eight Spirits. Governs illusions, unreliability, strange occurrences, changes, and unsettling surprises or anxieties."
+            },
+            {
+                id: 68,
+                term_zh: "庚加庚战格",
+                definition_zh: "庚加庚格局，战格。凶格。",
+                term_en: "Geng plus Geng Battle Formation (Geng + Geng / Zhan Ge)",
+                definition_en: "The formation of Geng over Geng, also known as the Battle Formation (Zhan Ge). An inauspicious formation indicating conflict, struggle, and opposition."
+            },
+            {
+                id: 69,
+                term_zh: "蓬星",
+                definition_zh: "天蓬星，九星之一，凶星、盗星。五行属水。与坎一宫对应。",
+                term_en: "Grass Star / Tian Peng Star (Peng Xing)",
+                definition_en: "Tian Peng Star, one of the Nine Stars. An inauspicious star, also known as the Bandit Star. Its element is Water. Corresponds to the Kan 1 Palace."
+            },
+            {
+                id: 70,
+                term_zh: "休门",
+                definition_zh: "八门之一，五行属水。吉门。代表休息、港湾、婚姻家庭。有时代表水路或船只，或欠债人躲藏之地。",
+                term_en: "Rest Door (Xiu Men)",
+                definition_en: "One of the Eight Doors, with the Water element. An auspicious door. Represents rest, retirement, harbors, marriage, and family. Sometimes represents waterways, boats, or a place where a debtor is hiding."
+            },
+            {
+                id: 71,
+                term_zh: "水血液",
+                definition_zh: "天蓬星和休门有时代表水和血液。",
+                term_en: "Water and Blood",
+                definition_en: "Tian Peng Star and Rest Door can sometimes represent water and blood in medical divination."
+            },
+            {
+                id: 72,
+                term_zh: "震三宫",
+                definition_zh: "九宫之一，五行属木。在人体中代表肝脏。",
+                term_en: "Zhen 3 Palace",
+                definition_en: "One of the Nine Palaces, associated with the East and the Wood element. In the human body, it represents the liver and feet."
+            },
+            {
+                id: 73,
+                term_zh: "天冲星",
+                definition_zh: "九星之一，次吉之星。五行属木。与东方三宫震卦对应。",
+                term_en: "Heaven Rushing Star (Tian Chong Xing)",
+                definition_en: "One of the Nine Stars, a moderately auspicious star. Its element is Wood. Corresponds to the Zhen trigram in the East (Palace 3). Associated with action, speed, and military matters."
+            },
+            {
+                id: 74,
+                term_zh: "戊加戊伏吟",
+                definition_zh: "戊加戊格局，伏吟。主凡事闭塞阻滞。",
+                term_en: "Wu plus Wu Fu Yin (Wu + Wu / Fu Yin)",
+                definition_en: "The formation of Wu over Wu, a Fu Yin (Static Chant) formation. Indicates that all matters are blocked and stagnant."
+            },
+            {
+                id: 75,
+                term_zh: "六仪击刑之凶格",
+                definition_zh: "六仪击刑格局，凶格。",
+                term_en: "Inauspicious Formation of Six Instruments Striking Punishment",
+                definition_en: "The Six Instruments Striking Punishment formation. An inauspicious formation."
+            },
+            {
+                id: 76,
+                term_zh: "肝火上炎于头部",
+                definition_zh: "肝脏的火气上行到头部。",
+                term_en: "Liver Fire Flaring Up to the Head",
+                definition_en: "A Traditional Chinese Medicine concept where excessive Liver fire (energy) rises to the head, causing symptoms like headache, dizziness, or red eyes."
+            },
+            {
+                id: 77,
+                term_zh: "肝开窍于目",
+                definition_zh: "肝脏的功能与眼睛相关联。",
+                term_en: "Liver Opens into the Eyes",
+                definition_en: "A Traditional Chinese Medicine concept stating that the functional state of the Liver is reflected in the eyes."
+            },
+            {
+                id: 78,
+                term_zh: "开门代表手术",
+                definition_zh: "在预测疾病时，开门可代表是否需要手术。",
+                term_en: "Open Door Represents Surgery",
+                definition_en: "In medical divination, the Open Door (Kai Men) can represent whether surgery is needed or has occurred."
+            },
+            {
+                id: 79,
+                term_zh: "天辅星",
+                definition_zh: "九星之一，大吉之星。五行属木。与东南四宫巽卦对应。人们认为它是天上的文曲星，与文化教育事业有关。在预测考试时代表考试院、老师。",
+                term_en: "Heaven Assistant Star (Tian Fu Xing)",
+                definition_en: "One of the Nine Stars, a very auspicious star. Its element is Wood. Corresponds to the Xun trigram in the Southeast (Palace 4). Considered the Wen Qu Star (Star of Arts/Literature) in the sky, associated with culture and education. In exam divination, it can represent the examination institution or teachers."
+            },
+            {
+                id: 80,
+                term_zh: "景门",
+                definition_zh: "八门之一，五行属火。平门。与离九宫对应。主血光、牺牲惨重。代表试卷、文书/合同、道路。",
+                term_en: "Scenery Door (Jing Men)",
+                definition_en: "One of the Eight Doors, with the Fire element. A neutral door. Corresponds to the Li 9 Palace. Can indicate bloodshed or heavy sacrifices in negative contexts. Represents documents, contracts, examination papers, roads, or plans."
+            },
+            {
+                id: 81,
+                term_zh: "年干庚",
+                definition_zh: "预测考试时，年干庚可代表录取院校。",
+                term_en: "Year Stem Geng",
+                definition_en: "In exam divination, if Geng is the Year Stem, it can represent the admitting institution."
+            },
+            {
+                id: 82,
+                term_zh: "比和",
+                definition_zh: "两宫或两个符号的五行相同，表示力量相当或和谐。",
+                term_en: "Bi He (Comparison / Harmony / Peer Relationship)",
+                definition_en: "When the Five Elements of two palaces or two symbols are the same, indicating comparable strength or a harmonious (peer) relationship."
+            },
+            {
+                id: 83,
+                term_zh: "文为钱财",
+                definition_zh: "在特定格局中，如日干为戊，则文（即戊）可代表钱财。",
+                term_en: "Wu Stem as Wealth (Wen Wei Qian Cai)",
+                definition_en: "In specific contexts, such as when the Day Stem is Wu (Earth), Wu itself can represent wealth (as 'Wen' can refer to Wu/documents which imply value)."
+            },
+            {
+                id: 84,
+                term_zh: "天任吉星",
+                definition_zh: "九星之一，大吉之星。五行属土。与艮八宫对应。",
+                term_en: "Heaven Duty Star (Tian Ren Xing)",
+                definition_en: "One of the Nine Stars, a very auspicious star. Its element is Earth. Corresponds to the Gen 8 Palace. Associated with diligence, responsibility, and agriculture."
+            },
+            {
+                id: 85,
+                term_zh: "九天吉神",
+                definition_zh: "九天神盘，吉神。",
+                term_en: "Nine Heavens Auspicious Spirit",
+                definition_en: "Nine Heavens (Jiu Tian) on the Spirit Plate, an auspicious spirit."
+            },
+            {
+                id: 86,
+                term_zh: "凶门被克凶不起",
+                definition_zh: "凶门落宫，受到地盘宫或其他因素的克制，其凶性不能发挥。",
+                term_en: "Inauspicious Door Controlled, Inauspiciousness Cannot Arise",
+                definition_en: "When an inauspicious Door lands in a palace and is controlled (clashed) by the palace's element or other factors, its negative influence cannot manifest strongly."
+            },
+            {
+                id: 87,
+                term_zh: "六亲",
+                definition_zh: "六爻预测中的六种关系符号：父母、子孙、官鬼、妻财、兄弟，以及世爻应爻代表的自身和对象。",
+                term_en: "Six Relatives (Liu Qin)",
+                definition_en: "The six types of relationship symbols in Liu Yao (Six Lines) divination: Parents, Offspring, Officer/Ghost, Wife/Wealth, Siblings, as well as the Self and Object lines representing oneself and the other party/subject."
+            },
+            {
+                id: 88,
+                term_zh: "用神",
+                definition_zh: "六爻或奇门遁甲预测中，代表所测事物或人物的符号（爻、门、星、神、干支等）。",
+                term_en: "Useful God / Focus Spirit / Representing Element (Yong Shen)",
+                definition_en: "In Liu Yao or Qimen Dunjia divination, the symbol (line, door, star, spirit, stem/branch, etc.) that represents the specific person, matter, or subject being investigated."
+            },
+            {
+                id: 89,
+                term_zh: "纳甲法",
+                definition_zh: "六爻预测中，将十天干和十二地支配入八纯卦各爻的方法。",
+                term_en: "Na Jia Method",
+                definition_en: "In Liu Yao divination, the method of assigning Heavenly Stems and Earthly Branches to the lines of the eight pure trigrams (and subsequently hexagrams)."
+            },
+            {
+                id: 90,
+                term_zh: "世爻",
+                definition_zh: "六爻预测中，代表求测者本人或主方的爻。",
+                term_en: "Self Line / Subject Line (Shi Yao)",
+                definition_en: "In Liu Yao divination, the line representing the querent or the primary party/subject."
+            },
+            {
+                id: 91,
+                term_zh: "应爻",
+                definition_zh: "六爻预测中，代表对方或所测事物的爻。",
+                term_en: "Object Line / Respondent Line (Ying Yao)",
+                definition_en: "In Liu Yao divination, the line representing the other party, the object of the query, or the environment related to the subject."
+            },
+            {
+                id: 92,
+                term_zh: "官鬼爻",
+                definition_zh: "六爻预测中，代表官府、疾病、灾祸、男、工作等的爻。",
+                term_en: "Officer and Ghost Line (Guan Gui Yao)",
+                definition_en: "In Liu Yao divination, the line representing authorities, government, illness, disasters, husband (for a woman), career, or anything that controls/restrains the Self line."
+            },
+            {
+                id: 93,
+                term_zh: "妻财爻",
+                definition_zh: "六爻预测中，代表妻子、钱财等的爻。",
+                term_en: "Wife and Wealth Line (Qi Cai Yao)",
+                definition_en: "In Liu Yao divination, the line representing wife (for a man), wealth, possessions, or anything controlled by the Self line."
+            },
+            {
+                id: 94,
+                term_zh: "用神临长生月建",
+                definition_zh: "用神在预测时的月令处于长生状态，表示旺盛有利。",
+                term_en: "Useful God at Long Life Stage and Month Pillar",
+                definition_en: "The Useful God (representing element) is in its 'Long Life' (Chang Sheng) phase according to the month's Earthly Branch (Month Pillar), indicating vitality and favorability."
+            },
+            {
+                id: 95,
+                term_zh: "用神动而化妻财回头生之",
+                definition_zh: "用神爻发动变化出妻财爻，且妻财爻的五行生用神爻的五行，表示吉利、得利。",
+                term_en: "Useful God moves and transforms into Wife & Wealth which turns back to produce it",
+                definition_en: "The Useful God line activates and transforms into a Wife & Wealth line, and this transformed Wife & Wealth line's element produces the element of the original Useful God line. This is an auspicious indication of gain or benefit."
+            },
+            {
+                id: 96,
+                term_zh: "测来意",
+                definition_zh: "在得到卦象后，判断求测者所问何事。",
+                term_en: "Divining the Querent's Intention (Ce Lai Yi)",
+                definition_en: "After obtaining a hexagram or chart, the process of discerning or confirming the true nature of the querent's question or purpose."
+            },
+            {
+                id: 97,
+                term_zh: "定应期",
+                definition_zh: "预测吉凶或事物发展趋势后，确定其发生具体时间的方法。",
+                term_en: "Determining the Outcome Period / Timing (Ding Ying Qi)",
+                definition_en: "After predicting the auspiciousness/inauspiciousness or the trend of events, the method of determining the specific time when it will occur."
+            },
+            {
+                id: 98,
+                term_zh: "卦象定应验之期",
+                definition_zh: "根据卦象的特点来确定应验的时间。",
+                term_en: "Hexagram Image Determines Outcome Period",
+                definition_en: "Determining the timing of an outcome based on the characteristics of the hexagram's image or structure."
+            },
+            {
+                id: 99,
+                term_zh: "卦数定应验之期",
+                definition_zh: "根据卦的数字（如先天卦数、后天卦数等）来确定应验的时间。",
+                term_en: "Hexagram Number Determines Outcome Period",
+                definition_en: "Determining the timing of an outcome based on the numerical values associated with the hexagrams (e.g., Pre-Heaven or Post-Heaven trigram numbers)."
+            },
+            {
+                id: 100,
+                term_zh: "以生体之卦定应验之期",
+                definition_zh: "根据卦中生成体卦的爻或因素来确定应验的时间。",
+                term_en: "Using the Producing Body Hexagram to Determine Outcome Period",
+                definition_en: "Determining the timing based on the lines or factors of the hexagram that produces the 'Body' hexagram in certain divination methods."
+            },
+            {
+                id: 101,
+                term_zh: "以问卦者之动静以定应期之迟速",
+                definition_zh: "根据问卦者在问卦时的行为举止来判断事情应验的快慢。",
+                term_en: "Using Querent's Actions/Stillness to Determine Outcome Speed",
+                definition_en: "Judging the speed of the outcome (sooner or later) based on the querent's demeanor (agitated or calm) at the time of the divination."
+            },
+            {
+                id: 102,
+                term_zh: "生克应期",
+                definition_zh: "根据用神或世爻的生克关系来确定应验的时间。",
+                term_en: "Production/Control Outcome Period",
+                definition_en: "Determining the timing based on production and control relationships involving the Useful God or the Self Line (when they are produced, controlled, or become strong)."
+            },
+            {
+                id: 103,
+                term_zh: "旬空应期",
+                definition_zh: "根据旬空填实或冲实的时间来确定应验的时间。",
+                term_en: "Decan Void Outcome Period",
+                definition_en: "Determining the timing based on when a Decan Void is 'filled' (by the arrival of the void branch) or 'clashed out of void' (by a clashing branch)."
+            },
+            {
+                id: 104,
+                term_zh: "逢合应期",
+                definition_zh: "根据六合逢冲或冲逢合的时间来确定应验的时间。",
+                term_en: "Encountering Combination Outcome Period",
+                definition_en: "Determining the timing based on when a Six Harmony combination is clashed apart, or when a clashing element meets a combining element."
+            },
+            {
+                id: 105,
+                term_zh: "逢冲应期",
+                definition_zh: "根据六冲逢合或逢冲的时间来确定应验的时间。",
+                term_en: "Encountering Clash Outcome Period",
+                definition_en: "Determining the timing based on when a Six Clash is resolved by a combination, or when a clashing element appears."
+            },
+            {
+                id: 106,
+                term_zh: "四刑应期",
+                definition_zh: "根据地支四刑的时间来确定应验的时间。",
+                term_en: "Four Punishments Outcome Period",
+                definition_en: "Determining the timing based on when Earthly Branch self-punishments or mutual punishments (Four Punishments) occur."
+            },
+            {
+                id: 107,
+                term_zh: "四柱",
+                definition_zh: "即八字，根据人的出生年、月、日、时所排出的四组干支。",
+                term_en: "Four Pillars (Si Zhu / BaZi)",
+                definition_en: "Also known as BaZi, the four pairs of Heavenly Stems and Earthly Branches derived from a person's year, month, day, and hour of birth, used in Chinese astrology."
+            },
+            {
+                id: 108,
+                term_zh: "日柱",
+                definition_zh: "四柱中的日干支，日干代表本人。",
+                term_en: "Day Pillar (Ri Zhu)",
+                definition_en: "The Stem-Branch pair of the day of birth in the Four Pillars. The Day Stem (Day Master) represents the person themselves."
+            },
+            {
+                id: 109,
+                term_zh: "时柱",
+                definition_zh: "四柱中的时干支，时干有时代表长子。",
+                term_en: "Hour Pillar (Shi Zhu)",
+                definition_en: "The Stem-Branch pair of the hour of birth in the Four Pillars. The Hour Stem can sometimes represent children, particularly the eldest son, or later life."
+            },
+            {
+                id: 110,
+                term_zh: "天克地冲",
+                definition_zh: "四柱或卦中，一组干支的天干克另一组干支的天干，同时地支冲另一组干支的地支，主凶灾。",
+                term_en: "Heaven Clashes Earth Rushes (Tian Ke Di Chong)",
+                definition_en: "In Four Pillars or hexagram analysis, when the Heavenly Stem of one Stem-Branch pair clashes with the Heavenly Stem of another, AND the Earthly Branch of the first pair rushes (clashes with) the Earthly Branch of the second. This usually indicates severe conflict or disaster."
+            },
+            {
+                id: 111,
+                term_zh: "鬼化鬼",
+                definition_zh: "六爻中官鬼爻发动后，变出的爻仍是官鬼爻，表示问题持续或重复出现。",
+                term_en: "Ghost Transforms into Ghost (Gui Hua Gui)",
+                definition_en: "In Liu Yao, when an Officer/Ghost line activates and transforms into another Officer/Ghost line, indicating the problem or trouble persists or reoccurs."
+            },
+            {
+                id: 112,
+                term_zh: "兄化兄",
+                definition_zh: "六爻中兄弟爻发动后，变出的爻仍是兄弟爻，表示竞争或破财持续或重复出现。",
+                term_en: "Brother Transforms into Brother (Xiong Hua Xiong)",
+                definition_en: "In Liu Yao, when a Sibling line activates and transforms into another Sibling line, indicating competition, financial loss, or disputes persist or reoccur."
+            },
+            {
+                id: 113,
+                term_zh: "本命",
+                definition_zh: "指求测者本人的命理信息，如日干五行等。",
+                term_en: "Natal Chart / Self Element (Ben Ming)",
+                definition_en: "Refers to the querent's own birth chart information, such as their Day Stem's Five Element, or their natal configuration."
+            },
+            {
+                id: 114,
+                term_zh: "入墓",
+                definition_zh: "五行在十二长生中处于墓地状态，表示被关、被困或力量弱小。",
+                term_en: "Entering Tomb/Grave (Ru Mu)",
+                definition_en: "When a Five Element is in its 'Tomb' or 'Grave' state in the Twelve Growth Phases, indicating being contained, trapped, hidden, or having weak power."
+            },
+            {
+                id: 115,
+                term_zh: "勾陈",
+                definition_zh: "八神之一。主迟滞、牵连、田土词讼，有时也主伤灾（如伤及肢体）。",
+                term_en: "Hooking Array (Gou Chen Spirit)",
+                definition_en: "One of the Eight Spirits (in some Qimen schools, or used in other systems like Liu Ren). Governs delays, entanglements, land/property disputes. Sometimes indicates injuries, especially to limbs, or chronic issues."
+            },
+            {
+                id: 116,
+                term_zh: "地支自刑",
+                definition_zh: "地支间的自身相刑关系（如辰午酉亥自刑），主自己造成的麻烦或内部矛盾。",
+                term_en: "Earthly Branch Self-Punishment (Di Zhi Zi Xing)",
+                definition_en: "A self-punishment relationship between identical Earthly Branches (e.g., Chen-Chen, Wu-Wu, You-You, Hai-Hai). Indicates self-inflicted problems, internal conflicts, or stubbornness."
+            },
+            {
+                id: 117,
+                term_zh: "体用生克",
+                definition_zh: "八卦预测中，将主卦或变卦分为体卦和用卦，根据五行生克关系判断吉凶。",
+                term_en: "Body-Use Production and Control (Ti Yong Sheng Ke)",
+                definition_en: "In Plum Blossom I Ching (Mei Hua Yi Shu) or other hexagram-based divination, the original or transformed hexagram is divided into a 'Body' (Ti) trigram and a 'Use' (Yong) trigram. Their elemental production/control relationship is key to judging outcomes."
+            },
+            {
+                id: 118,
+                term_zh: "用克体",
+                definition_zh: "八卦预测中，用卦五行克体卦五行。",
+                term_en: "Use Controls Body (Yong Ke Ti)",
+                definition_en: "In Body-Use analysis, the Five Element of the 'Use' trigram controls (clashes with) the Five Element of the 'Body' trigram. Generally an unfavorable indication for the 'Body' (subject)."
+            },
+            {
+                id: 119,
+                term_zh: "体克用",
+                definition_zh: "八卦预测中，体卦五行克用卦五行。",
+                term_en: "Body Controls Use (Ti Ke Yong)",
+                definition_en: "In Body-Use analysis, the Five Element of the 'Body' trigram controls (clashes with) the Five Element of the 'Use' trigram. Generally indicates the 'Body' (subject) can overcome or obtain the 'Use' (object/matter)."
+            },
+            {
+                id: 120,
+                term_zh: "青龙临坤宫而动",
+                definition_zh: "在特定的地震预测卦象中，青龙神盘落在坤宫并发动，被认为是地震的预兆。",
+                term_en: "Green Dragon arrives at Kun Palace and moves",
+                definition_en: "In specific earthquake prediction hexagrams (Liu Yao), if the Green Dragon (Qing Long) spirit lands on a line in the Kun (Earth) trigram/palace and that line is activated, it is considered a sign of an earthquake."
+            },
+            {
+                id: 121,
+                term_zh: "卦临月建日建旺地",
+                definition_zh: "预测时的卦象中，用神或相关爻的地支与预测时的月建、日建五行相同或受其生助，表示力量旺盛。",
+                term_en: "Hexagram at Month Pillar, Day Pillar, Prosperous Place",
+                definition_en: "In a divination chart, when the Earthly Branch of the Useful God or a relevant line is the same as, or produced by, the Month Branch (Month Pillar) or Day Branch (Day Pillar) of the divination time, it indicates strong energy and support."
+            },
+            {
+                id: 122,
+                term_zh: "太岁",
+                definition_zh: "值年的地支。",
+                term_en: "Tai Sui (Grand Duke Jupiter / Year Ruler)",
+                definition_en: "The Earthly Branch governing the current year. A powerful celestial influence."
+            },
+            {
+                id: 123,
+                term_zh: "太岁宜静不宜动动即有震动之灾",
+                definition_zh: "当太岁地支出现在卦中并发动时，尤其是不该动时动，常预示着变动或灾害，在地震预测中尤其如此。",
+                term_en: "Tai Sui should be still, not moving; movement brings disaster of shock/tremor",
+                definition_en: "When the Tai Sui (Year Branch) appears in a hexagram and is activated, especially if it shouldn't be active, it often foretells significant changes or disasters. This is particularly noted in earthquake prediction."
+            },
+            {
+                id: 124,
+                term_zh: "拆补法",
+                definition_zh: "张志春提倡的一种奇门遁甲起局方法，严格按照二十四节气，哪个节气就用哪个节气的奇门局，避免超神、接气、置闰的繁琐。",
+                term_en: "Chai Bu Method (Disassembling and Supplementing Method)",
+                definition_en: "A Qimen Dunjia chart plotting method advocated by Zhang Zhichun, strictly adhering to the 24 Solar Terms. The chart for a specific solar term is used for the duration of that term, avoiding complexities of 'Chao Shen' (Exceeding Spirit), 'Jie Qi' (Connecting Qi), and 'Zhi Run' (Interpolation)."
+            },
+            {
+                id: 125,
+                term_zh: "排宫法 / 活盘奇门遁甲",
+                definition_zh: "奇门遁甲的一种推演方法。",
+                term_en: "Pai Gong Fa (Arranging Palaces Method) / Living Plate Qimen Dunjia",
+                definition_en: "A method of Qimen Dunjia chart construction and interpretation where stars and other components are 'arranged' or rotated through the palaces. Also known as Living Plate Qimen."
+            },
+            {
+                id: 126,
+                term_zh: "飞宫法 / 飞盘奇门遁甲",
+                definition_zh: "奇门遁甲的一种推演方法。",
+                term_en: "Fei Gong Fa (Flying Palaces Method) / Flying Plate Qimen Dunjia",
+                definition_en: "A method of Qimen Dunjia chart construction and interpretation where stars and other components 'fly' from their original palace to other palaces based on specific rules. Also known as Flying Plate Qimen."
+            },
+            {
+                id: 127,
+                term_zh: "数理奇门",
+                definition_zh: "奇门遁甲的应用方向之一，主要用于预测分析。",
+                term_en: "Numerological Qimen (Mathematical Qimen / Shu Li Qimen)",
+                definition_en: "An application branch of Qimen Dunjia focusing primarily on predictive analysis and calculations based on its symbolic system."
+            },
+            {
+                id: 128,
+                term_zh: "法术奇门",
+                definition_zh: "奇门遁甲的应用方向之一，将奇门与道家法术相结合。",
+                term_en: "Magical Qimen (Ritualistic Qimen / Fa Shu Qimen)",
+                definition_en: "An application branch of Qimen Dunjia that combines its principles with Taoist magical rituals and practices for influencing outcomes or spiritual purposes."
+            },
+            {
+                id: 129,
+                term_zh: "三式",
+                definition_zh: "太乙、奇门、六壬的合称，是中国传统预测学中最高层次的预测学。",
+                term_en: "Three Arts / Three Styles (San Shi)",
+                definition_en: "The collective term for Taiyi Shenshu, Qimen Dunjia, and Liu Ren Shenke, considered the highest levels of traditional Chinese divination arts."
+            },
+            {
+                id: 130,
+                term_zh: "易坛泰斗",
+                definition_zh: "对易学领域造诣深厚、享有极高声誉的尊称。",
+                term_en: "Yijing Arena's Great Master / Leading Authority in I Ching Studies (Yi Tan Tai Dou)",
+                definition_en: "An honorary title for someone with profound achievements and a very high reputation in the field of I Ching (Book of Changes) studies."
+            }
+        ];
+
+        let currentLanguage = 'zh';
+        const mainTitleElement = document.getElementById('main-title');
+        const gridContainer = document.getElementById('flashcard-grid');
+        const searchInput = document.getElementById('search-input');
+        const langZhButton = document.getElementById('lang-zh');
+        const langEnButton = document.getElementById('lang-en');
+
+        const titles = {
+            zh: "奇门遁甲词汇",
+            en: "Qimen Dunjia Glossary"
+        };
+
+        function renderFlashcards(filter = '') {
+            gridContainer.innerHTML = '';
+            const lowerCaseFilter = filter.toLowerCase();
+
+            const filteredTerms = qimenTerms.filter(item => {
+                const term = currentLanguage === 'zh' ? item.term_zh : item.term_en;
+                const definition = currentLanguage === 'zh' ? item.definition_zh : item.definition_en;
+                return term.toLowerCase().includes(lowerCaseFilter) || definition.toLowerCase().includes(lowerCaseFilter);
+            });
+
+            if (filteredTerms.length === 0) {
+                gridContainer.innerHTML = `<p style="text-align:center; grid-column: 1 / -1;">${currentLanguage === 'zh' ? '未找到匹配的词汇。' : 'No matching terms found.'}</p>`;
+                return;
+            }
+
+            filteredTerms.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'flashcard';
+
+                const termElement = document.createElement('div');
+                termElement.className = 'flashcard-term';
+                termElement.textContent = currentLanguage === 'zh' ? item.term_zh : item.term_en;
+
+                const definitionElement = document.createElement('div');
+                definitionElement.className = 'flashcard-definition';
+                definitionElement.textContent = currentLanguage === 'zh' ? item.definition_zh : item.definition_en;
+
+                card.appendChild(termElement);
+                card.appendChild(definitionElement);
+                gridContainer.appendChild(card);
+            });
+        }
+
+        function setLanguage(lang) {
+            currentLanguage = lang;
+            mainTitleElement.textContent = titles[lang];
+            document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+            
+            if (lang === 'zh') {
+                langZhButton.classList.add('active');
+                langEnButton.classList.remove('active');
+                searchInput.placeholder = "搜索词汇...";
+            } else {
+                langEnButton.classList.add('active');
+                langZhButton.classList.remove('active');
+                searchInput.placeholder = "Search terms...";
+            }
+            renderFlashcards(searchInput.value);
+        }
+
+        langZhButton.addEventListener('click', () => setLanguage('zh'));
+        langEnButton.addEventListener('click', () => setLanguage('en'));
+        searchInput.addEventListener('input', (e) => renderFlashcards(e.target.value));
+
+        // Initial render
+        setLanguage('zh'); 
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>后天八卦 / 九宫格 基础</title>
+    <style>
+        :root {
+            --bg-color: #f4f4f4;
+            --text-color: #333;
+            --grid-border-color: #ccc;
+            --cell-bg-color: #fff;
+            --center-cell-bg-color: #e9e9e9;
+            --modal-bg-color: #fff;
+            --modal-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            --button-bg-color: #007bff;
+            --button-text-color: #fff;
+            --button-hover-bg-color: #0056b3;
+            --link-color: #007bff;
+            --element-water-bg: #e0f7fa; /* Light Blue */
+            --element-wood-bg: #e8f5e9;  /* Light Green */
+            --element-fire-bg: #ffebee;  /* Light Red */
+            --element-earth-bg: #fff9c4; /* Light Yellow */
+            --element-metal-bg: #f5f5f5; /* Light Grey */
+            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+        }
+
+        body {
+            font-family: var(--font-family);
+            margin: 0;
+            padding: 20px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .app-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .app-title {
+            font-size: 1.8em;
+            margin-bottom: 10px;
+            color: var(--text-color);
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        button {
+            padding: 10px 15px;
+            font-size: 0.9em;
+            cursor: pointer;
+            background-color: var(--button-bg-color);
+            color: var(--button-text-color);
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: var(--button-hover-bg-color);
+        }
+
+        .bagua-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 5px;
+            border: 2px solid var(--grid-border-color);
+            background-color: var(--grid-border-color);
+            margin-bottom: 30px;
+            max-width: 500px; /* Max width for the grid */
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .grid-cell {
+            background-color: var(--cell-bg-color);
+            aspect-ratio: 1 / 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 5px;
+            font-size: 0.8em;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            overflow: hidden; /* Prevent content spill */
+        }
+
+        .grid-cell:hover:not(.center-palace) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .grid-cell.center-palace {
+            background-color: var(--center-cell-bg-color);
+            cursor: default;
+            font-weight: bold;
+        }
+        
+        .grid-cell .trigram-symbol {
+            font-size: 1.8em; /* Larger for symbol */
+            margin-bottom: 2px;
+        }
+        
+        .grid-cell .qimen-gate-label {
+            font-weight: bold;
+            color: var(--button-bg-color); /* Distinct color for gate */
+            margin-top: 3px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: var(--modal-bg-color);
+            margin: 10% auto;
+            padding: 25px;
+            border: 1px solid var(--grid-border-color);
+            border-radius: 8px;
+            width: 80%;
+            max-width: 600px;
+            box-shadow: var(--modal-shadow);
+            position: relative;
+        }
+
+        .close-button {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close-button:hover,
+        .close-button:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .modal h3 {
+            margin-top: 0;
+            color: var(--button-bg-color);
+        }
+        .modal h4 {
+            margin-top: 15px;
+            margin-bottom: 5px;
+            color: var(--text-color);
+            border-bottom: 1px solid var(--grid-border-color);
+            padding-bottom: 3px;
+        }
+        .modal p {
+            margin-bottom: 8px;
+        }
+        .modal hr {
+            border: 0;
+            height: 1px;
+            background: var(--grid-border-color);
+            margin: 15px 0;
+        }
+
+        .static-sections details {
+            background-color: var(--cell-bg-color);
+            border: 1px solid var(--grid-border-color);
+            border-radius: 5px;
+            margin-bottom: 10px;
+            padding: 10px;
+        }
+
+        .static-sections summary {
+            font-weight: bold;
+            cursor: pointer;
+            color: var(--button-bg-color);
+        }
+        
+        .static-sections summary:hover {
+            text-decoration: underline;
+        }
+
+        .static-sections .wu-xing-cycle {
+            margin-top: 10px;
+        }
+        .static-sections .wu-xing-cycle p {
+            margin: 5px 0;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            body { padding: 15px; }
+            .app-title { font-size: 1.5em; }
+            .controls { flex-direction: column; }
+            button { width: 100%; max-width: 280px; }
+            .grid-cell { font-size: 0.7em; padding: 3px; }
+            .grid-cell .trigram-symbol { font-size: 1.5em; }
+            .modal-content { width: 90%; margin: 20% auto; padding: 20px;}
+        }
+        @media (max-width: 480px) {
+            .app-title { font-size: 1.3em; }
+            .grid-cell { font-size: 0.6em; }
+            .grid-cell .trigram-symbol { font-size: 1.3em; }
+            .modal-content { padding: 15px;}
+            .modal h3 { font-size: 1.2em; }
+            .modal p, .modal li { font-size: 0.9em; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="app-header">
+            <h1 class="app-title" data-lang-key="appTitle">后天八卦 (Houtian Ba Gua) / 九宫格 (Jiu Gong Ge) 基础</h1>
+        </div>
+
+        <div class="controls">
+            <button id="langToggleBtn" data-lang-key="langToggle">Switch to English</button>
+            <button id="qimenToggleBtn" data-lang-key="qimenButtonOverlay">叠加奇门遁甲八门</button>
+        </div>
+
+        <div class="bagua-grid" id="baguaGrid">
+            <!-- Grid cells will be generated by JavaScript -->
+        </div>
+
+        <div id="infoModal" class="modal">
+            <div class="modal-content">
+                <span class="close-button" id="modalCloseBtn">&times;</span>
+                <h3 id="modalTitle"></h3>
+                <p><strong data-lang-key="modalDirectionLabel">Direction:</strong> <span id="modalDirection"></span></p>
+                <p><strong data-lang-key="modalElementLabel">Element:</strong> <span id="modalElement"></span></p>
+                <p><strong data-lang-key="modalQualitiesLabel">Qualities:</strong> <span id="modalQualities"></span></p>
+                <p><strong data-lang-key="modalEnhancementLabel">Enhancement:</strong> <span id="modalEnhancement"></span></p>
+                
+                <h4 data-lang-key="modalWuXingTitle">五行 (Wu Xing) Interactions</h4>
+                <p><span data-lang-key="generatesLabel">Generates:</span> <span id="modalWuXingGenerates"></span></p>
+                <p><span data-lang-key="controlsLabel">Controls:</span> <span id="modalWuXingControls"></span></p>
+                <p><span data-lang-key="isGeneratedByLabel">Is Generated By:</span> <span id="modalWuXingGeneratedBy"></span></p>
+                <p><span data-lang-key="isControlledByLabel">Is Controlled By:</span> <span id="modalWuXingControlledBy"></span></p>
+
+                <div id="qimenInfoSection" style="display:none;">
+                    <hr>
+                    <h4 id="modalQimenGateTitle"></h4>
+                    <p><strong data-lang-key="qimenGateOriginLabel">Originates from:</strong> <span id="modalQimenGateOrigin"></span></p>
+                    <p><strong data-lang-key="qimenGateDerivedElementLabel">Derived Elemental Nature:</strong> <span id="modalQimenGateDerivedElement"></span></p>
+                    <p><strong data-lang-key="qimenGatePropertiesLabel">Properties:</strong> <span id="modalQimenGateProperties"></span></p>
+                    <p id="modalQimenInteraction"></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="static-sections">
+            <details>
+                <summary data-lang-key="aboutWuXingTitle">关于五行 (Wu Xing - The Five Elements)</summary>
+                <div data-lang-key="aboutWuXingContent">
+                    <p>The Five Elements (五行 Wu Xing) - Wood (木), Fire (火), Earth (土), Metal (金), and Water (水) - are fundamental concepts in Chinese metaphysics. They represent dynamic processes and relationships.</p>
+                    <div class="wu-xing-cycle">
+                        <h5 data-lang-key="generatingCycleTitle">Generating Cycle (相生 Xiangsheng):</h5>
+                        <p data-lang-key="genWoodFire">Wood feeds Fire (木生火)</p>
+                        <p data-lang-key="genFireEarth">Fire creates Earth (ash) (火生土)</p>
+                        <p data-lang-key="genEarthMetal">Earth bears Metal (土生金)</p>
+                        <p data-lang-key="genMetalWater">Metal carries Water (condensation) (金生水)</p>
+                        <p data-lang-key="genWaterWood">Water nourishes Wood (水生木)</p>
+                    </div>
+                    <div class="wu-xing-cycle">
+                        <h5 data-lang-key="controllingCycleTitle">Controlling Cycle (相克 Xiangke):</h5>
+                        <p data-lang-key="ctrlWoodEarth">Wood parts Earth (roots) (木克土)</p>
+                        <p data-lang-key="ctrlEarthWater">Earth dams Water (土克水)</p>
+                        <p data-lang-key="ctrlWaterFire">Water extinguishes Fire (水克火)</p>
+                        <p data-lang-key="ctrlFireMetal">Fire melts Metal (火克金)</p>
+                        <p data-lang-key="ctrlMetalWood">Metal chops Wood (金克木)</p>
+                    </div>
+                </div>
+            </details>
+
+            <details>
+                <summary data-lang-key="about24MountainsTitle">About Directions & 二十四山 (24 Mountains)</summary>
+                <div data-lang-key="about24MountainsContent">
+                    <p>While the Ba Gua provides 8 main directions (each 45 degrees), traditional Feng Shui and the '水到奇成' method often use a more precise directional system called the 24 Mountains (二十四山).</p>
+                    <p>Each of the 8 Ba Gua directions is further subdivided into three 'Mountains' (each approximately 15 degrees), allowing for more specific orientation. For example, North (坎 Kan) includes 壬 (Ren), 子 (Zi), and 癸 (Gui) mountains.</p>
+                    <p>A special compass called a Luopan (罗盘) is used to determine the exact 'Mountain' a building faces or sits on. This app introduces the Ba Gua foundation; the '水到奇成' course will delve into the application of the 24 Mountains with Qimen Dunjia.</p>
+                </div>
+            </details>
+
+            <details>
+                <summary data-lang-key="aboutAppTitle">About this App & Next Steps</summary>
+                <div data-lang-key="aboutAppContent">
+                    <p>This app covers foundational concepts of Houtian Ba Gua, Wu Xing, and an introduction to how Qimen Dunjia Eight Gates (八门) are related to the Ba Gua palaces. It serves as a preparatory tool for the "水到奇成" course.</p>
+                    <p>The "水到奇成" course will expand on these by teaching how to interpret dynamic Qimen Dunjia charts, where Gates, Stars, Stems, and Deities move through the palaces based on time. You will learn to analyze their interactions, identify auspicious and inauspicious configurations including "四害" (Si Hai - problem indicators), and apply this knowledge practically, often in conjunction with the 24 Mountains system for precise Feng Shui applications.</p>
+                </div>
+            </details>
+        </div>
+    </div>
+
+    <script>
+        const UI_TEXTS = {
+            zh: {
+                appTitle: "后天八卦 (Houtian Ba Gua) / 九宫格 (Jiu Gong Ge) 基础",
+                langToggle: "切换到英文 (Switch to English)",
+                qimenButtonOverlay: "叠加奇门遁甲八门",
+                qimenButtonRemove: "移除奇门遁甲八门",
+                zhongGongLabel: "中宫",
+                modalDirectionLabel: "方位:",
+                modalElementLabel: "五行:",
+                modalQualitiesLabel: "属性:",
+                modalEnhancementLabel: "助益:",
+                modalWuXingTitle: "五行生克",
+                generatesLabel: "生:",
+                controlsLabel: "克:",
+                isGeneratedByLabel: "被生:",
+                isControlledByLabel: "被克:",
+                qimenGateOriginLabel: "源于:",
+                qimenGateDerivedElementLabel: "门之五行:",
+                qimenGatePropertiesLabel: "特性:",
+                qimenInteractionIntro1: "在此基础视图中，",
+                qimenInteractionIntro2: "位于其本宫",
+                qimenInteractionIntro3: "。此处，其五行属性 (",
+                qimenInteractionIntro4: ") 与宫位五行 (",
+                qimenInteractionIntro5: ") 一致，代表其最基本的状态。",
+                qimenInteractionCourseInfo: "“水到奇成”课程将教授此门在特定时间的奇门遁甲盘中游走到*其他*宫位时，其能量如何动态变化和相互作用。在这些动态情境下的不利相互作用或特定负面条件（称为“四害”）是高级分析的关键，并将在课程中详细介绍。",
+                aboutWuXingTitle: "关于五行 (Wu Xing - The Five Elements)",
+                aboutWuXingContent: "<p>五行（木、火、土、金、水）是中国玄学的基础概念，代表动态的过程和关系。</p><div class='wu-xing-cycle'><h5>相生循环:</h5><p>木生火</p><p>火生土（灰烬）</p><p>土生金</p><p>金生水（凝结）</p><p>水生木</p></div><div class='wu-xing-cycle'><h5>相克循环:</h5><p>木克土（根）</p><p>土克水（坝）</p><p>水克火</p><p>火克金</p><p>金克木</p></div>",
+                generatingCycleTitle: "相生循环 (Xiangsheng):",
+                genWoodFire: "木生火", genFireEarth: "火生土 (灰烬)", genEarthMetal: "土生金", genMetalWater: "金生水 (凝结)", genWaterWood: "水生木",
+                controllingCycleTitle: "相克循环 (Xiangke):",
+                ctrlWoodEarth: "木克土 (根)", ctrlEarthWater: "土克水 (堤坝)", ctrlWaterFire: "水克火", ctrlFireMetal: "火克金", ctrlMetalWood: "金克木",
+                about24MountainsTitle: "关于方位与二十四山",
+                about24MountainsContent: "<p>虽然八卦提供了8个主要方位（每个45度），但传统风水和“水到奇成”方法通常使用更精确的方位系统，称为二十四山。</p><p>八卦的每个方位进一步细分为三个“山”（每个约15度），以便更精确地定向。例如，北方（坎宫）包括壬、子、癸三山。</p><p>使用称为罗盘的特殊指南针来确定建筑物精确的坐向“山”。本应用介绍八卦基础；“水到奇成”课程将深入探讨二十四山与奇门遁甲的应用。</p>",
+                aboutAppTitle: "关于此应用与后续步骤",
+                aboutAppContent: "<p>本应用涵盖后天八卦、五行的基础概念，并介绍了奇门遁甲八门如何与八卦宫位相关联。它是“水到奇成”课程的预备工具。</p><p>“水到奇成”课程将在此基础上扩展，教授如何解读动态的奇门遁甲盘，其中门、星、神奇仪会根据时间在各宫位移动。您将学习分析它们的相互作用，识别吉凶格局，包括“四害”（问题指标），并将这些知识实际应用于风水，通常结合二十四山系统进行精确操作。</p>",
+            },
+            en: {
+                appTitle: "Houtian Ba Gua / Jiu Gong Ge Foundations",
+                langToggle: "Switch to Chinese (切换到中文)",
+                qimenButtonOverlay: "Overlay Qimen Dunjia Gates (八门)",
+                qimenButtonRemove: "Remove Qimen Overlay",
+                zhongGongLabel: "Zhong Gong - Central Palace",
+                modalDirectionLabel: "Direction:",
+                modalElementLabel: "Element:",
+                modalQualitiesLabel: "Qualities:",
+                modalEnhancementLabel: "Enhancement:",
+                modalWuXingTitle: "五行 (Wu Xing) Interactions",
+                generatesLabel: "Generates:",
+                controlsLabel: "Controls:",
+                isGeneratedByLabel: "Is Generated By:",
+                isControlledByLabel: "Is Controlled By:",
+                qimenGateOriginLabel: "Originates from:",
+                qimenGateDerivedElementLabel: "Derived Elemental Nature:",
+                qimenGatePropertiesLabel: "Properties:",
+                qimenInteractionIntro1: "In this foundational view, the",
+                qimenInteractionIntro2: "is shown in its home palace, the",
+                qimenInteractionIntro3: ". Here, its elemental nature (",
+                qimenInteractionIntro4: ") is aligned with the palace's element (",
+                qimenInteractionIntro5: "), representing its most fundamental state.",
+                qimenInteractionCourseInfo: "The '水到奇成' course will teach how this Gate's energy dynamically changes and interacts when it moves to *other* palaces in a time-specific Qimen Dunjia chart. Unfavorable interactions or specific negative conditions (known as '四害 - Si Hai' or 'problem indicators') in those dynamic contexts are key to advanced analysis and will be covered in the course.",
+                aboutWuXingTitle: "About 五行 (Wu Xing - The Five Elements)",
+                aboutWuXingContent: "<p>The Five Elements (五行 Wu Xing) - Wood (木), Fire (火), Earth (土), Metal (金), and Water (水) - are fundamental concepts in Chinese metaphysics. They represent dynamic processes and relationships.</p><div class='wu-xing-cycle'><h5>Generating Cycle (相生 Xiangsheng):</h5><p>Wood feeds Fire (木生火)</p><p>Fire creates Earth (ash) (火生土)</p><p>Earth bears Metal (土生金)</p><p>Metal carries Water (condensation) (金生水)</p><p>Water nourishes Wood (水生木)</p></div><div class='wu-xing-cycle'><h5>Controlling Cycle (相克 Xiangke):</h5><p>Wood parts Earth (roots) (木克土)</p><p>Earth dams Water (土克水)</p><p>Water extinguishes Fire (水克火)</p><p>Fire melts Metal (火克金)</p><p>Metal chops Wood (金克木)</p></div>",
+                generatingCycleTitle: "Generating Cycle (相生 Xiangsheng):",
+                genWoodFire: "Wood feeds Fire (木生火)", genFireEarth: "Fire creates Earth (ash) (火生土)", genEarthMetal: "Earth bears Metal (土生金)", genMetalWater: "Metal carries Water (condensation) (金生水)", genWaterWood: "Water nourishes Wood (水生木)",
+                controllingCycleTitle: "Controlling Cycle (相克 Xiangke):",
+                ctrlWoodEarth: "Wood parts Earth (roots) (木克土)", ctrlEarthWater: "Earth dams Water (土克水)", ctrlWaterFire: "Water extinguishes Fire (水克火)", ctrlFireMetal: "Fire melts Metal (火克金)", ctrlMetalWood: "Metal chops Wood (金克木)",
+                about24MountainsTitle: "About Directions & 二十四山 (24 Mountains)",
+                about24MountainsContent: "<p>While the Ba Gua provides 8 main directions (each 45 degrees), traditional Feng Shui and the '水到奇成' method often use a more precise directional system called the 24 Mountains (二十四山).</p><p>Each of the 8 Ba Gua directions is further subdivided into three 'Mountains' (each approximately 15 degrees), allowing for more specific orientation. For example, North (坎 Kan) includes 壬 (Ren), 子 (Zi), and 癸 (Gui) mountains.</p><p>A special compass called a Luopan (罗盘) is used to determine the exact 'Mountain' a building faces or sits on. This app introduces the Ba Gua foundation; the '水到奇成' course will delve into the application of the 24 Mountains with Qimen Dunjia.</p>",
+                aboutAppTitle: "About this App & Next Steps",
+                aboutAppContent: "<p>This app covers foundational concepts of Houtian Ba Gua, Wu Xing, and an introduction to how Qimen Dunjia Eight Gates (八门) are related to the Ba Gua palaces. It serves as a preparatory tool for the \"水到奇成\" course.</p><p>The \"水到奇成\" course will expand on these by teaching how to interpret dynamic Qimen Dunjia charts, where Gates, Stars, Stems, and Deities move through the palaces based on time. You will learn to analyze their interactions, identify auspicious and inauspicious configurations including \"四害\" (Si Hai - problem indicators), and apply this knowledge practically, often in conjunction with the 24 Mountains system for precise Feng Shui applications.</p>",
+            }
+        };
+
+        const WUXING_RELATIONS = {
+            Wood:  { zh: '木', en: 'Wood',  generates: 'Fire',  controls: 'Earth', generatedBy: 'Water', controlledBy: 'Metal', color: 'var(--element-wood-bg)' },
+            Fire:  { zh: '火', en: 'Fire',  generates: 'Earth', controls: 'Metal', generatedBy: 'Wood',  controlledBy: 'Water', color: 'var(--element-fire-bg)' },
+            Earth: { zh: '土', en: 'Earth', generates: 'Metal', controls: 'Water', generatedBy: 'Fire',  controlledBy: 'Wood',  color: 'var(--element-earth-bg)' },
+            Metal: { zh: '金', en: 'Metal', generates: 'Water', controls: 'Wood',  generatedBy: 'Earth', controlledBy: 'Fire',  color: 'var(--element-metal-bg)' },
+            Water: { zh: '水', en: 'Water', generates: 'Wood',  controls: 'Fire',  generatedBy: 'Metal', controlledBy: 'Earth', color: 'var(--element-water-bg)' }
+        };
+        
+        const PALACE_DETAILS = [
+            { // 0: Xun SE
+                id: 'XUN', trigramSymbol: '☴', baseElement: 'Wood',
+                qimenGateKey: 'DU',
+                texts: {
+                    zh: { trigramName: '巽', direction: '东南', directionDetail: '东南 - 包含辰、巽、巳三山。', qualities: '巽代表风、顺从和渗透。', elementEnhancement: '东南方木元素可以增强成长和灵活性。', qimenGateName: '杜门', qimenGateFullName: '杜门 (Du Men) - 闭塞之门', qimenGateProperties: '杜门通常与隐藏、保密或技术有关，宜躲藏、捕猎。' },
+                    en: { trigramName: 'Xun', direction: 'Southeast', directionDetail: 'Southeast - contains the Chen, Xun, Si mountains.', qualities: 'Xun represents Wind, flexibility, and penetration.', elementEnhancement: 'The Wood element in the Southeast can enhance growth and flexibility.', qimenGateName: 'Du Gate', qimenGateFullName: '杜门 (Du Men) - Delusion Gate', qimenGateProperties: 'The Delusion Gate is often related to hiding, secrecy, or technical skills, good for concealment or hunting.' }
+                }
+            },
+            { // 1: Li S
+                id: 'LI', trigramSymbol: '☲', baseElement: 'Fire',
+                qimenGateKey: 'JING_SCENERY',
+                texts: {
+                    zh: { trigramName: '离', direction: '南', directionDetail: '南 - 包含丙、午、丁三山。', qualities: '离代表火、光明和美丽。', elementEnhancement: '南方火元素可以增强名誉和热情。', qimenGateName: '景门', qimenGateFullName: '景门 (Jing Men) - 风景之门', qimenGateProperties: '景门通常是中平的，与文件、考试、宴会和美丽事物有关。' },
+                    en: { trigramName: 'Li', direction: 'South', directionDetail: 'South - contains the Bing, Wu, Ding mountains.', qualities: 'Li represents Fire, brightness, and beauty.', elementEnhancement: 'The Fire element in the South can enhance fame and passion.', qimenGateName: 'Jing Gate', qimenGateFullName: '景门 (Jing Men) - Scenery Gate', qimenGateProperties: 'The Scenery Gate is generally neutral, related to documents, exams, banquets, and beautiful things.' }
+                }
+            },
+            { // 2: Kun SW
+                id: 'KUN', trigramSymbol: '☷', baseElement: 'Earth',
+                qimenGateKey: 'SI',
+                texts: {
+                    zh: { trigramName: '坤', direction: '西南', directionDetail: '西南 - 包含未、坤、申三山。', qualities: '坤代表地、包容和滋养。', elementEnhancement: '西南方土元素可以增强稳定和人际关系。', qimenGateName: '死门', qimenGateFullName: '死门 (Si Men) - 死亡之门', qimenGateProperties: '死门通常是不吉利的，代表结束、停滞，但适合吊唁、埋葬或追讨。' },
+                    en: { trigramName: 'Kun', direction: 'Southwest', directionDetail: 'Southwest - contains the Wei, Kun, Shen mountains.', qualities: 'Kun represents Earth, receptivity, and nurturing.', elementEnhancement: 'The Earth element in the Southwest can enhance stability and relationships.', qimenGateName: 'Si Gate', qimenGateFullName: '死门 (Si Men) - Death Gate', qimenGateProperties: 'The Death Gate is generally inauspicious, representing endings or stagnation, but suitable for funerals, burials, or debt collection.' }
+                }
+            },
+            { // 3: Zhen E
+                id: 'ZHEN', trigramSymbol: '☳', baseElement: 'Wood',
+                qimenGateKey: 'SHANG',
+                texts: {
+                    zh: { trigramName: '震', direction: '东', directionDetail: '东 - 包含甲、卯、乙三山。', qualities: '震代表雷、行动和奋发。', elementEnhancement: '东方木元素可以增强活力和开创精神。', qimenGateName: '伤门', qimenGateFullName: '伤门 (Shang Men) -伤害之门', qimenGateProperties: '伤门通常是不吉利的，代表伤害、冲突，但适合捕猎、索债或竞技。' },
+                    en: { trigramName: 'Zhen', direction: 'East', directionDetail: 'East - contains the Jia, Mao, Yi mountains.', qualities: 'Zhen represents Thunder, action, and initiative.', elementEnhancement: 'The Wood element in the East can enhance vitality and pioneering spirit.', qimenGateName: 'Shang Gate', qimenGateFullName: '伤门 (Shang Men) - Injury Gate', qimenGateProperties: 'The Injury Gate is generally inauspicious, representing harm or conflict, but suitable for hunting, debt collection, or competitions.' }
+                }
+            },
+            { // 4: Zhong Gong (Center)
+                id: 'ZHONG', isCenter: true, baseElement: 'Earth', // Often considered Earth
+                texts: {
+                    zh: { trigramName: '中宫', direction: '中央', directionDetail: '中央土，万物之母。', qualities: '中宫代表中心、平衡与转化。', elementEnhancement: '中央土元素平衡各方能量。' },
+                    en: { trigramName: 'Zhong Gong', direction: 'Center', directionDetail: 'Central Earth, mother of all things.', qualities: 'Zhong Gong represents the center, balance, and transformation.', elementEnhancement: 'The Central Earth element balances energies from all directions.' }
+                }
+            },
+            { // 5: Dui W
+                id: 'DUI', trigramSymbol: '☱', baseElement: 'Metal',
+                qimenGateKey: 'JING_FEAR',
+                texts: {
+                    zh: { trigramName: '兑', direction: '西', directionDetail: '西 - 包含庚、酉、辛三山。', qualities: '兑代表泽、喜悦和言说。', elementEnhancement: '西方金元素可以增强沟通和财运。', qimenGateName: '惊门', qimenGateFullName: '惊门 (Jing Men) - 惊恐之门', qimenGateProperties: '惊门通常是不吉利的，代表惊恐、官非，但适合诉讼或捕捉。' },
+                    en: { trigramName: 'Dui', direction: 'West', directionDetail: 'West - contains the Geng, You, Xin mountains.', qualities: 'Dui represents Lake, joy, and speech.', elementEnhancement: 'The Metal element in the West can enhance communication and financial luck.', qimenGateName: 'Jing Gate', qimenGateFullName: '惊门 (Jing Men) - Fear Gate', qimenGateProperties: 'The Fear Gate is generally inauspicious, representing fear or legal issues, but suitable for lawsuits or capture.' }
+                }
+            },
+            { // 6: Gen NE
+                id: 'GEN', trigramSymbol: '☶', baseElement: 'Earth',
+                qimenGateKey: 'SHENG',
+                texts: {
+                    zh: { trigramName: '艮', direction: '东北', directionDetail: '东北 - 包含丑、艮、寅三山。', qualities: '艮代表山、静止和沉思。', elementEnhancement: '东北方土元素可以增强学业和稳定。', qimenGateName: '生门', qimenGateFullName: '生门 (Sheng Men) - 生命之门', qimenGateProperties: '生门通常是非常吉利的，代表生机、发展和财富，宜求财、建房。' },
+                    en: { trigramName: 'Gen', direction: 'Northeast', directionDetail: 'Northeast - contains the Chou, Gen, Yin mountains.', qualities: 'Gen represents Mountain, stillness, and contemplation.', elementEnhancement: 'The Earth element in the Northeast can enhance learning and stability.', qimenGateName: 'Sheng Gate', qimenGateFullName: '生门 (Sheng Men) - Life Gate', qimenGateProperties: 'The Life Gate is generally very auspicious, representing vitality, growth, and wealth, good for seeking profit or building.' }
+                }
+            },
+            { // 7: Kan N
+                id: 'KAN', trigramSymbol: '☵', baseElement: 'Water',
+                qimenGateKey: 'XIU',
+                texts: {
+                    zh: { trigramName: '坎', direction: '北', directionDetail: '北 - 包含壬、子、癸三山。', qualities: '坎代表水、挑战和内省。', elementEnhancement: '北方水元素可以增强事业运和智慧。', qimenGateName: '休门', qimenGateFullName: '休门 (Xiu Men) - 休养之门', qimenGateProperties: '休门通常是吉利的，适合休养、学习、规划和会见贵人。' },
+                    en: { trigramName: 'Kan', direction: 'North', directionDetail: 'North - contains the Ren, Zi, Gui mountains.', qualities: 'Kan represents Water, challenges, and introspection.', elementEnhancement: 'The Water element in the North can enhance career flow and wisdom.', qimenGateName: 'Xiu Gate', qimenGateFullName: '休门 (Xiu Men) - Rest Gate', qimenGateProperties: 'The Rest Gate is generally auspicious, suitable for rest, learning, planning, and meeting benefactors.' }
+                }
+            },
+            { // 8: Qian NW
+                id: 'QIAN', trigramSymbol: '☰', baseElement: 'Metal',
+                qimenGateKey: 'KAI',
+                texts: {
+                    zh: { trigramName: '乾', direction: '西北', directionDetail: '西北 - 包含戌、乾、亥三山。', qualities: '乾代表天、力量和领导。', elementEnhancement: '西北方金元素可以增强权威和贵人运。', qimenGateName: '开门', qimenGateFullName: '开门 (Kai Men) - 开创之门', qimenGateProperties: '开门通常是非常吉利的，代表开创、事业和机遇，宜开业、出行。' },
+                    en: { trigramName: 'Qian', direction: 'Northwest', directionDetail: 'Northwest - contains the Xu, Qian, Hai mountains.', qualities: 'Qian represents Heaven, strength, and leadership.', elementEnhancement: 'The Metal element in the Northwest can enhance authority and benefactor luck.', qimenGateName: 'Kai Gate', qimenGateFullName: '开门 (Kai Men) - Open Gate', qimenGateProperties: 'The Open Gate is generally very auspicious, representing new beginnings, career, and opportunities, good for starting ventures or travel.' }
+                }
+            }
+        ];
+
+        let currentLang = 'zh';
+        let isQimenOverlayActive = false;
+
+        const baguaGrid = document.getElementById('baguaGrid');
+        const langToggleBtn = document.getElementById('langToggleBtn');
+        const qimenToggleBtn = document.getElementById('qimenToggleBtn');
+        const modal = document.getElementById('infoModal');
+        const modalCloseBtn = document.getElementById('modalCloseBtn');
+
+        function getLocalizedText(obj, key) {
+            return obj.texts[currentLang][key] || obj.texts.en[key] || `Missing translation for ${key}`;
+        }
+        function getUiText(key) {
+            return UI_TEXTS[currentLang][key] || UI_TEXTS.en[key] || `Missing UI translation for ${key}`;
+        }
+        function getWuxingElementName(elementKey) {
+            return WUXING_RELATIONS[elementKey][currentLang] || WUXING_RELATIONS[elementKey].en;
+        }
+
+        function renderGrid() {
+            baguaGrid.innerHTML = '';
+            PALACE_DETAILS.forEach((palace, index) => {
+                const cell = document.createElement('div');
+                cell.classList.add('grid-cell');
+                cell.dataset.palaceIndex = index;
+
+                const palaceElement = WUXING_RELATIONS[palace.baseElement];
+                if (palaceElement) {
+                    cell.style.backgroundColor = palaceElement.color;
+                }
+
+                if (palace.isCenter) {
+                    cell.classList.add('center-palace');
+                    const centerLabel = document.createElement('div');
+                    centerLabel.textContent = isQimenOverlayActive ? '★' : getUiText('zhongGongLabel');
+                    cell.appendChild(centerLabel);
+                } else {
+                    const trigramSymbolDiv = document.createElement('div');
+                    trigramSymbolDiv.classList.add('trigram-symbol');
+                    trigramSymbolDiv.textContent = palace.trigramSymbol;
+                    cell.appendChild(trigramSymbolDiv);
+
+                    const trigramNameDiv = document.createElement('div');
+                    trigramNameDiv.textContent = `${getLocalizedText(palace, 'trigramName')} (${palace.id})`;
+                    cell.appendChild(trigramNameDiv);
+
+                    const directionDiv = document.createElement('div');
+                    directionDiv.textContent = getLocalizedText(palace, 'direction');
+                    cell.appendChild(directionDiv);
+
+                    if (isQimenOverlayActive && palace.qimenGateKey) {
+                        const qimenGateDiv = document.createElement('div');
+                        qimenGateDiv.classList.add('qimen-gate-label');
+                        qimenGateDiv.textContent = getLocalizedText(palace, 'qimenGateName');
+                        cell.appendChild(qimenGateDiv);
+                    }
+                    cell.addEventListener('click', () => showInfoModal(index));
+                }
+                baguaGrid.appendChild(cell);
+            });
+        }
+
+        function showInfoModal(palaceIndex) {
+            const palace = PALACE_DETAILS[palaceIndex];
+            if (palace.isCenter && !isQimenOverlayActive) return; // Center not clickable in Ba Gua mode
+
+            document.getElementById('modalTitle').textContent = `${getLocalizedText(palace, 'trigramName')} (${palace.id}) - ${palace.trigramSymbol || ''}`;
+            document.getElementById('modalDirection').textContent = getLocalizedText(palace, 'directionDetail');
+            document.getElementById('modalElement').textContent = getWuxingElementName(palace.baseElement);
+            document.getElementById('modalQualities').textContent = getLocalizedText(palace, 'qualities');
+            document.getElementById('modalEnhancement').textContent = getLocalizedText(palace, 'elementEnhancement');
+
+            const wuxing = WUXING_RELATIONS[palace.baseElement];
+            document.getElementById('modalWuXingGenerates').textContent = getWuxingElementName(wuxing.generates);
+            document.getElementById('modalWuXingControls').textContent = getWuxingElementName(wuxing.controls);
+            document.getElementById('modalWuXingGeneratedBy').textContent = getWuxingElementName(wuxing.generatedBy);
+            document.getElementById('modalWuXingControlledBy').textContent = getWuxingElementName(wuxing.controlledBy);
+            
+            const qimenSection = document.getElementById('qimenInfoSection');
+            if (isQimenOverlayActive && palace.qimenGateKey && !palace.isCenter) {
+                qimenSection.style.display = 'block';
+                document.getElementById('modalQimenGateTitle').textContent = getLocalizedText(palace, 'qimenGateFullName');
+                
+                // Find original palace for the gate
+                const originalPalaceForGate = PALACE_DETAILS.find(p => p.id === palace.id); // Gate originates from its own palace in this static view
+                const gateOriginText = `${getLocalizedText(originalPalaceForGate, 'trigramName')} (${originalPalaceForGate.id}) ${getUiText('palaceLabel') || 'Palace'}`;
+                document.getElementById('modalQimenGateOrigin').textContent = gateOriginText;
+
+                const gateDerivedElement = originalPalaceForGate.baseElement; // Gate's element is its home palace's element
+                document.getElementById('modalQimenGateDerivedElement').textContent = getWuxingElementName(gateDerivedElement);
+                document.getElementById('modalQimenGateProperties').textContent = getLocalizedText(palace, 'qimenGateProperties');
+
+                let interactionText = `${getUiText('qimenInteractionIntro1')} ${getLocalizedText(palace, 'qimenGateName')} ${getUiText('qimenInteractionIntro2')} ${getLocalizedText(originalPalaceForGate, 'trigramName')} ${getUiText('palaceLabel') || 'Palace'}${getUiText('qimenInteractionIntro3')}${getWuxingElementName(gateDerivedElement)}${getUiText('qimenInteractionIntro4')}${getWuxingElementName(palace.baseElement)}${getUiText('qimenInteractionIntro5')}`;
+                interactionText += ` ${getUiText('qimenInteractionCourseInfo')}`;
+                document.getElementById('modalQimenInteraction').textContent = interactionText;
+
+            } else {
+                qimenSection.style.display = 'none';
+            }
+
+            modal.style.display = 'block';
+        }
+
+        function updateAllText() {
+            document.documentElement.lang = currentLang;
+            document.querySelectorAll('[data-lang-key]').forEach(el => {
+                const key = el.dataset.langKey;
+                if (UI_TEXTS[currentLang][key]) {
+                    if (el.tagName === 'SUMMARY' || el.classList.contains('app-title') || el.tagName === 'BUTTON' || el.tagName === 'H5' || el.tagName === 'STRONG') {
+                         el.textContent = UI_TEXTS[currentLang][key];
+                    } else {
+                         el.innerHTML = UI_TEXTS[currentLang][key]; // For elements with HTML content like static sections
+                    }
+                }
+            });
+            // Update specific button texts
+            langToggleBtn.textContent = getUiText('langToggle');
+            qimenToggleBtn.textContent = isQimenOverlayActive ? getUiText('qimenButtonRemove') : getUiText('qimenButtonOverlay');
+            
+            // Update title attribute of HTML element
+            const mainTitleElement = document.querySelector('title');
+            if (mainTitleElement) {
+                mainTitleElement.textContent = currentLang === 'zh' ? '后天八卦 / 九宫格 基础' : 'Houtian Ba Gua / Jiu Gong Ge Foundations';
+            }
+            renderGrid(); // Re-render grid for language changes in cell labels
+        }
+
+        langToggleBtn.addEventListener('click', () => {
+            currentLang = currentLang === 'zh' ? 'en' : 'zh';
+            updateAllText();
+        });
+
+        qimenToggleBtn.addEventListener('click', () => {
+            isQimenOverlayActive = !isQimenOverlayActive;
+            qimenToggleBtn.textContent = isQimenOverlayActive ? getUiText('qimenButtonRemove') : getUiText('qimenButtonOverlay');
+            renderGrid();
+        });
+
+        modalCloseBtn.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+
+        window.addEventListener('click', (event) => {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+
+        // Initial setup
+        updateAllText(); // This will also call renderGrid
+
+    </script>
+</body>
+</html>
