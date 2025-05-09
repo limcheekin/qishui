@@ -1,18 +1,18 @@
-# qishui - 水到奇成 Prerequisites Learning App
+# 奇门/风水入门 (Qimen/FengShui Foundations) App
 
 [![Deploy to GitHub Pages](https://github.com/limcheekin/qishui/actions/workflows/deploy.yaml/badge.svg)](https://github.com/limcheekin/qishui/actions/workflows/deploy.yaml)
 
-An interactive web application designed to help users learn the foundational concepts of Chinese metaphysics. This project serves as a prerequisite learning tool for the "水到奇成" (Shuǐ Dào Qí Chéng – "Success comes when conditions are ripe") course.
+An interactive web application designed to help users learn the foundational concepts of Chinese metaphysics. This project serves as a learning tool for the Qimen / FengShui Foundations course.
 
 **Live Demos:**
-*   **Main App (Ba Gua / Qimen Foundations):** [https://limcheekin.github.io/qishui/](https://limcheekin.github.io/qishui/)
+*   **Main App (Qimen / FengShui Foundations):** [https://limcheekin.github.io/qishui/](https://limcheekin.github.io/qishui/)
 *   **Qimen Flashcards:** [https://limcheekin.github.io/qishui/flashcard/qimen.html](https://limcheekin.github.io/qishui/flashcard/qimen.html)
 
 ## Table of Contents
 
 *   [Overview](#overview)
 *   [Key Features](#key-features)
-    *   [Main Application: Ba Gua / Qimen Foundations](#main-application-ba-gua--qimen-foundations)
+    *   [Main Application: Qimen / FengShui Foundations](#main-application-ba-gua--qimen-foundations)
     *   [Qimen Flashcard Application](#qimen-flashcard-application)
 *   [Screenshots](#screenshots)
 *   [Technology Stack](#technology-stack)
@@ -24,10 +24,10 @@ An interactive web application designed to help users learn the foundational con
 
 ## Overview
 
-The **qishui** project encompasses two main web-based learning tools:
+The project encompasses two main web-based learning tools:
 
-1.  **Ba Gua / Qimen Foundations App (`index.html`):** An interactive application focusing on:
-    *   后天八卦 (Hòutiān Bāguà - Later Heaven Ba Gua) / 九宫格 (Jiǔ Gōng Gé - Nine Palaces Grid)
+1.  **Qimen / FengShui Foundations App (`index.html`):** An interactive application focusing on:
+    *   后天八卦 (Hòutiān Bāguà - Later Heaven Ba Gua) / 九宫 (Jiǔ Gōng Gé - Nine Palaces)
     *   五行 (Wǔ Xíng - Five Elements) theory and interactions.
     *   Basic concepts of 奇门遁甲 (Qímén Dùnjiǎ), including the Eight Gates (八门 - Bā Mén) and their home palaces, and the Twenty-Four Mountains (二十四山 - Èrshísì Shān).
     *   This main application was created based on concepts introduced in the YouTube video [《水到奇成》说明会](https://www.youtube.com/watch?v=2FykEOX-dqU) to prepare the author for attending the offline class on 17 May 2025.
@@ -37,7 +37,7 @@ Both applications are designed to be intuitive, responsive, and bilingual (Simpl
 
 ## Key Features
 
-### Main Application: Ba Gua / Qimen Foundations (`index.html`)
+### Main Application: Qimen / FengShui Foundations (`index.html`)
 
 *   **Interactive Ba Gua Grid:** A visual 3x3 grid representing the Houtian Ba Gua / Jiu Gong Ge. Users can click on each of the 8 outer palaces to view detailed information.
 *   **Qimen Eight Gates Overlay:** Toggleable overlay to display the original Eight Gates (八门) within their respective Ba Gua palaces.
@@ -55,7 +55,7 @@ Both applications are designed to be intuitive, responsive, and bilingual (Simpl
     *   About this App & Course Next Steps
     *   Glossary of Terms
 *   **Responsive Design:** Adapts to various screen sizes for optimal viewing on desktop, tablet, and mobile devices.
-*   **SVG Diagrams:** Dynamically generated SVG visuals for Wu Xing cycles and Luopan subdivision for better understanding.
+*   **SVG Diagrams:** Dynamically generated SVG visuals for Wu Xing (Five Elements) cycles and Luopan subdivision for better understanding.
 *   **Accessibility:** Designed with keyboard navigation and ARIA attributes for improved accessibility.
 
 ### Qimen Flashcard Application (`flashcard/qimen.html`)
@@ -84,7 +84,7 @@ Both applications are designed to be intuitive, responsive, and bilingual (Simpl
 ```
 └── qishui/
     ├── README.md               # This file
-    ├── index.html              # Main Ba Gua / Qimen Foundations application
+    ├── index.html              # Main Qimen / FengShui Foundations application
     ├── LICENSE                 # MIT License
     ├── spec.md                 # Specifications for index.html
     ├── flashcard/
@@ -99,7 +99,7 @@ Both applications are designed to be intuitive, responsive, and bilingual (Simpl
 
 ### Accessing the Applications
 
-*   **Main App (Ba Gua / Qimen Foundations):** Open [index.html](https://limcheekin.github.io/qishui/)
+*   **Main App (Qimen / FengShui Foundations):** Open [index.html](https://limcheekin.github.io/qishui/)
 *   **Qimen Flashcards:** Open [flashcard/qimen.html](https://limcheekin.github.io/qishui/flashcard/qimen.html)
 
 ### Main Application (`index.html`)
@@ -111,7 +111,7 @@ Both applications are designed to be intuitive, responsive, and bilingual (Simpl
     *   Click "Show Qimen Gates" (显示奇门八门) to overlay Qimen Gate information on the grid and in the info panel. Click again to hide.
     *   Click "Show 24 Mountains" (显示二十四山) to subdivide palaces into 24 Mountain segments. Click on a segment for details. Click again to hide.
     *   Both overlays can be active simultaneously.
-5.  **Static Information:** Expand the sections below the grid (e.g., "How to Use This App", "About Wu Xing") to read more.
+5.  **Static Information:** Expand the sections below the grid (e.g., "How to Use This App", "About Wu Xing (Five Elements)") to read more.
 
 ### Qimen Flashcard Application (`flashcard/qimen.html`)
 
