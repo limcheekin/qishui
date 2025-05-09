@@ -30,7 +30,7 @@ The **qishui** project encompasses two main web-based learning tools:
     *   后天八卦 (Hòutiān Bāguà - Later Heaven Ba Gua) / 九宫格 (Jiǔ Gōng Gé - Nine Palaces Grid)
     *   五行 (Wǔ Xíng - Five Elements) theory and interactions.
     *   Basic concepts of 奇门遁甲 (Qímén Dùnjiǎ), including the Eight Gates (八门 - Bā Mén) and their home palaces, and the Twenty-Four Mountains (二十四山 - Èrshísì Shān).
-    *   This main application was created based on concepts introduced in the YouTube video [《水到奇成》推广课](https://www.youtube.com/watch?v=2FykEOX-dqU) to prepare the author for attending the offline class on 17 May 2025.
+    *   This main application was created based on concepts introduced in the YouTube video [《水到奇成》说明会](https://www.youtube.com/watch?v=2FykEOX-dqU) to prepare the author for attending the offline class on 17 May 2025.
 2.  **Qimen Flashcard App (`flashcard/qimen.html`):** A supplementary tool for learning and searching key Qimen Dunjia terminology.
 
 Both applications are designed to be intuitive, responsive, and bilingual (Simplified Chinese and English), providing a solid foundation for students of the "水到奇成" course.
