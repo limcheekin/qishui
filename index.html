@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>后天八卦 / 九宫格 基础</title>
+    <title>后天八卦 / 九宫 基础</title>
     <style>
         /* CSS: General Resets & Defaults */
         :root {
@@ -610,11 +610,6 @@
                 mountainsOverlayActive: false,
                 selectedElementId: null, // e.g., 'palace-kan', 'mountain-zi'
             },
-            // Houtian: SE, S, SW, E, Center, W, NE, N, NW
-            // Grid visually (top to bottom, left to right):
-            // Xun (SE) | Li (S)  | Kun (SW)
-            // Zhen (E) | Zhong | Dui (W)
-            // Gen (NE) | Kan (N) | Qian (NW)
             palaceOrder: ['xun', 'li', 'kun', 'zhen', 'zhonggong', 'dui', 'gen', 'kan', 'qian'],
             palaces: {
                 xun: { trigramSymbol: "☴", elementId: 'wood', color: 'rgba(144, 238, 144, 0.5)', mountains: ['chen', 'xun_m', 'si'], gateId: 'du', nameKey: 'palaceXun', dirKey: 'dirSE', dirDetailKey: 'palaceXunDirDetail', qualitiesKey: 'qualitiesXun', enhancementKey: 'enhanceXun' },
@@ -627,21 +622,21 @@
                 kan: { trigramSymbol: "☵", elementId: 'water', color: 'rgba(173, 216, 230, 0.5)', mountains: ['ren', 'zi', 'gui'], gateId: 'xiu', nameKey: 'palaceKan', dirKey: 'dirN', dirDetailKey: 'palaceKanDirDetail', qualitiesKey: 'qualitiesKan', enhancementKey: 'enhanceKan' },
                 qian: { trigramSymbol: "☰", elementId: 'metal', color: 'rgba(211, 211, 211, 0.5)', mountains: ['xu', 'qian_m', 'hai'], gateId: 'kai', nameKey: 'palaceQian', dirKey: 'dirNW', dirDetailKey: 'palaceQianDirDetail', qualitiesKey: 'qualitiesQian', enhancementKey: 'enhanceQian' }
             },
-            elements: {
+            elements: { // In Wu Xing, 'controls' is often termed 'restricts' or 'overcomes'. '克 kè' is used.
                 water: { nameKey: 'elementWater', generates: 'wood', controls: 'fire', generatedBy: 'metal', controlledBy: 'earth' },
                 wood:  { nameKey: 'elementWood', generates: 'fire', controls: 'earth', generatedBy: 'water', controlledBy: 'metal' },
                 fire:  { nameKey: 'elementFire', generates: 'earth', controls: 'metal', generatedBy: 'wood', controlledBy: 'water' },
                 earth: { nameKey: 'elementEarth', generates: 'metal', controls: 'water', generatedBy: 'fire', controlledBy: 'wood' },
                 metal: { nameKey: 'elementMetal', generates: 'water', controls: 'wood', generatedBy: 'earth', controlledBy: 'fire' },
             },
-            gates: {
+            gates: { // "Gate" changed to "Door" in English where applicable, keys remain 'gate' for consistency.
                 xiu:    { originalPalaceId: 'kan',  elementId: 'water', nameKey: 'gateXiu',    propertiesKey: 'gateXiuProperties', shortNameKey: 'gateXiuShort' },
                 sheng:  { originalPalaceId: 'gen',  elementId: 'earth', nameKey: 'gateSheng',  propertiesKey: 'gateShengProperties', shortNameKey: 'gateShengShort' },
                 shang:  { originalPalaceId: 'zhen', elementId: 'wood',  nameKey: 'gateShang',  propertiesKey: 'gateShangProperties', shortNameKey: 'gateShangShort' },
                 du:     { originalPalaceId: 'xun',  elementId: 'wood',  nameKey: 'gateDu',     propertiesKey: 'gateDuProperties', shortNameKey: 'gateDuShort' },
                 jing:   { originalPalaceId: 'li',   elementId: 'fire',  nameKey: 'gateJing',   propertiesKey: 'gateJingProperties', shortNameKey: 'gateJingShort' },
-                si_g:   { originalPalaceId: 'kun',  elementId: 'earth', nameKey: 'gateSi',     propertiesKey: 'gateSiProperties', shortNameKey: 'gateSiShort' },
-                jing_j: { originalPalaceId: 'dui',  elementId: 'metal', nameKey: 'gateJing2',  propertiesKey: 'gateJing2Properties', shortNameKey: 'gateJing2Short' },
+                si_g:   { originalPalaceId: 'kun',  elementId: 'earth', nameKey: 'gateSi',     propertiesKey: 'gateSiProperties', shortNameKey: 'gateSiShort' }, // gateSi refers to 死门
+                jing_j: { originalPalaceId: 'dui',  elementId: 'metal', nameKey: 'gateJing2',  propertiesKey: 'gateJing2Properties', shortNameKey: 'gateJing2Short' }, // gateJing2 refers to 惊门
                 kai:    { originalPalaceId: 'qian', elementId: 'metal', nameKey: 'gateKai',    propertiesKey: 'gateKaiProperties', shortNameKey: 'gateKaiShort' }
             },
             mountains: {
@@ -649,14 +644,14 @@
                 zi:     { parentPalaceId: 'kan', degreeRange: "352.5° - 7.5°",   nameKey: "mountainZi",  fullNameKey: "mountainZiFull",  implicationKey: "mountainZiImplication" },
                 gui:    { parentPalaceId: 'kan', degreeRange: "7.5° - 22.5°",    nameKey: "mountainGui", fullNameKey: "mountainGuiFull", implicationKey: "mountainGuiImplication" },
                 chou:   { parentPalaceId: 'gen', degreeRange: "22.5° - 37.5°",   nameKey: "mountainChou", fullNameKey: "mountainChouFull", implicationKey: "mountainChouImplication" },
-                gen_m:  { parentPalaceId: 'gen', degreeRange: "37.5° - 52.5°",   nameKey: "mountainGenM",  fullNameKey: "mountainGenMFull",  implicationKey: "mountainGenMImplication" }, // Distinguish mountain Gen from palace Gen
+                gen_m:  { parentPalaceId: 'gen', degreeRange: "37.5° - 52.5°",   nameKey: "mountainGenM",  fullNameKey: "mountainGenMFull",  implicationKey: "mountainGenMImplication" }, 
                 yin:    { parentPalaceId: 'gen', degreeRange: "52.5° - 67.5°",   nameKey: "mountainYin", fullNameKey: "mountainYinFull", implicationKey: "mountainYinImplication" },
                 jia:    { parentPalaceId: 'zhen', degreeRange: "67.5° - 82.5°",  nameKey: "mountainJia", fullNameKey: "mountainJiaFull", implicationKey: "mountainJiaImplication" },
                 mao:    { parentPalaceId: 'zhen', degreeRange: "82.5° - 97.5°",  nameKey: "mountainMao", fullNameKey: "mountainMaoFull", implicationKey: "mountainMaoImplication" },
                 yi:     { parentPalaceId: 'zhen', degreeRange: "97.5° - 112.5°", nameKey: "mountainYi",  fullNameKey: "mountainYiFull",  implicationKey: "mountainYiImplication" },
                 chen:   { parentPalaceId: 'xun', degreeRange: "112.5° - 127.5°", nameKey: "mountainChen",fullNameKey: "mountainChenFull", implicationKey: "mountainChenImplication" },
                 xun_m:  { parentPalaceId: 'xun', degreeRange: "127.5° - 142.5°", nameKey: "mountainXunM", fullNameKey: "mountainXunMFull", implicationKey: "mountainXunMImplication" },
-                si:     { parentPalaceId: 'xun', degreeRange: "142.5° - 157.5°", nameKey: "mountainSiM",  fullNameKey: "mountainSiMFull",  implicationKey: "mountainSiMImplication" }, // Distinguish Si mountain
+                si:     { parentPalaceId: 'xun', degreeRange: "142.5° - 157.5°", nameKey: "mountainSiM",  fullNameKey: "mountainSiMFull",  implicationKey: "mountainSiMImplication" }, 
                 bing:   { parentPalaceId: 'li', degreeRange: "157.5° - 172.5°", nameKey: "mountainBing",fullNameKey: "mountainBingFull", implicationKey: "mountainBingImplication" },
                 wu:     { parentPalaceId: 'li', degreeRange: "172.5° - 187.5°", nameKey: "mountainWu",  fullNameKey: "mountainWuFull",  implicationKey: "mountainWuImplication" },
                 ding:   { parentPalaceId: 'li', degreeRange: "187.5° - 202.5°", nameKey: "mountainDing",fullNameKey: "mountainDingFull", implicationKey: "mountainDingImplication" },
@@ -672,7 +667,7 @@
             },
             content: {
                 zh: {
-                    appTitle: "后天八卦 / 九宫格 基础", courseName: "水到奇成课程",
+                    appTitle: "后天八卦 / 九宫 基础", courseName: "奇门/风水入门课程", // Updated courseName as per diff header's implication
                     langSwitchLabel: "语言:",
                     showQimenGates: "显示奇门八门", hideQimenGates: "隐藏奇门八门",
                     show24Mountains: "显示二十四山", hide24Mountains: "隐藏二十四山",
@@ -695,20 +690,30 @@
 
                     elementWater: "水", elementWood: "木", elementFire: "火", elementEarth: "土", elementMetal: "金",
 
-                    qualitiesXun: "巽代表风、进入、顺从。", qualitiesLi: "离代表火、光明、美丽。", qualitiesKun: "坤代表地、柔顺、滋养。",
-                    qualitiesZhen: "震代表雷、行动、奋起。", qualitiesDui: "兑代表泽、喜悦、言说。", qualitiesGen: "艮代表山、停止、稳定。",
-                    qualitiesKan: "坎代表水、险陷、智慧。", qualitiesQian: "乾代表天、刚健、领导。",
+                    qualitiesXun: "巽代表风、进入、顺从。", 
+                    qualitiesLi: "离代表火、光明、美丽。", 
+                    qualitiesKun: "坤代表地、柔顺、滋养。",
+                    qualitiesZhen: "震代表雷、行动、奋起。", 
+                    qualitiesDui: "兑代表泽、喜悦、言说。", 
+                    qualitiesGen: "艮代表山、开垦、稳定。", // Updated
+                    qualitiesKan: "坎代表水、险陷、智慧。", 
+                    qualitiesQian: "乾代表天、刚健、领导。",
 
-                    enhanceXun: "东南方的木元素可增强成长与发展。", enhanceLi: "南方的火元素可增强名誉与认可。",
-                    enhanceKun: "西南方的土元素可增强稳定与关系。", enhanceZhen: "东方的木元素可增强动力与新开始。",
-                    enhanceDui: "西方的金元素可增强完成与子女运。", enhanceGen: "东北方的土元素可增强知识与自我成长。",
-                    enhanceKan: "北方的水元素可增强事业运与智慧。", enhanceQian: "西北方的金元素可增强贵人运与权威。",
+                    enhanceXun: "东南方的木元素可增强成长与发展。", 
+                    enhanceLi: "南方的火元素可增强声誉与认可。", // Updated
+                    enhanceKun: "西南方的土元素可增强稳定与关系。", 
+                    enhanceZhen: "东方的木元素可增强动力与新开始。",
+                    enhanceDui: "西方的金元素可增强表达能力与喜悦之气。", // Updated
+                    enhanceGen: "东北方的土元素可增强知识与自我成长。",
+                    enhanceKan: "北方的水元素可增强抗压性与智慧。", // Updated
+                    enhanceQian: "西北方的金元素可增强发奋图强之势与权威。", // Updated
 
                     wuXingInteractionsTitle: "五行生克",
-                    generatesLabel: "生 (shēng)", controlsLabel: "克 (kè)",
-                    isGeneratedByLabel: "被生 (bèi shēng)", isControlledByLabel: "被克 (bèi kè)",
+                    generatesLabel: "生 (shēng)", 
+                    controlsLabel: "克 (kè)", // Will be mapped to "RestrictedLabel" for English
+                    isGeneratedByLabel: "被生 (bèi shēng)", 
+                    isControlledByLabel: "被克 (bèi kè)", // Will be mapped to "IsRestrictedByLabel" for English
                     
-                    // Gate full names are constructed: Gate Name (Pinyin) - Meaning in English for EN
                     gateXiu: "休门 (Xiū Mén)", gateSheng: "生门 (Shēng Mén)", gateShang: "伤门 (Shāng Mén)",
                     gateDu: "杜门 (Dù Mén)", gateJing: "景门 (Jǐng Mén)", gateSi: "死门 (Sǐ Mén)",
                     gateJing2: "惊门 (Jīng Mén)", gateKai: "开门 (Kāi Mén)",
@@ -716,18 +721,18 @@
                     gateXiuShort: "休", gateShengShort: "生", gateShangShort: "伤", gateDuShort: "杜",
                     gateJingShort: "景", gateSiShort: "死", gateJing2Short: "惊", gateKaiShort: "开",
 
-                    gateXiuProperties: "休门通常利于休养生息、贵人相助。",
+                    gateXiuProperties: "休门通常利于休养生息、修整、修行。", // Updated
                     gateShengProperties: "生门通常利于求财、生意、生命力。",
                     gateShangProperties: "伤门通常与伤害、竞争、索取有关。",
                     gateDuProperties: "杜门通常与隐藏、闭塞、技术有关。",
-                    gateJingProperties: "景门通常与文书、策划、火有关。",
-                    gateSiProperties: "死门通常与结束、吊唁、安静有关。",
-                    gateJing2Properties: "惊门通常与口舌、官非、惊恐有关。",
+                    gateJingProperties: "景门通常与文书、策划、愿景、美丽有关。", // Updated
+                    gateSiProperties: "死门通常与结束、不动产、安静有关。", // Updated
+                    gateJing2Properties: "惊门通常与口才、口舌、官非、惊恐有关。", // Updated
                     gateKaiProperties: "开门通常利于开创事业、出行、谒贵。",
 
                     qimenInteractionTitle: "奇门概念",
                     qimenFundamentalState: "基本状态：在此视图中，{gateName} 在其本宫 ({palaceName})，其元素 ({gateElement}) 与宫位元素 ({palaceElement}) 一致。",
-                    qimenCourseInsight: "课程重点：‘水到奇成’课程将教授此门在特定奇门时盘中飞临 *其他* 宫位时其能量如何动态变化。在这些动态情境中识别不利的相互作用或状况 (‘四害’) 是关键，并将在课程中涵盖。",
+                    qimenCourseInsight: "课程重点：奇门/风水入门课程系统讲解奇门遁甲与风水堪舆的核心基础理论，将奇门遁甲中吉凶判断体系深度融入风水堪舆实践，通过对人事与环境因素的综合分析，帮助学员掌握趋吉避凶的实用方法，实现个人财富、事业和健康运势的提升。", // Updated
                     gateOriginalPalace: "源于宫位", derivedElement: "衍生五行",
 
                     mountainRen: "壬", mountainZi: "子", mountainGui: "癸", mountainChou: "丑", mountainGenM: "艮", mountainYin: "寅",
@@ -746,17 +751,16 @@
 
                     mountainParentPalace: "所属宫位", mountainDirectionSuffix: "方向", mountainApproxDegrees: "大约度数",
                     mountainInheritedElement: "主要五行",
-                    mountainInheritedElementNote: "(源自 {palaceName} 宫)。具体的山向五行细微差别将在‘水到奇成’课程中探讨。",
+                    mountainInheritedElementNote: "(源自 {palaceName} 宫)。具体的山向五行细微差别将在‘奇门/风水入门’课程中探讨。", // Course name updated
                     mountainFengShuiImplication: "风水含义",
                     mountainCourseRelevance: "课程关联",
-                    mountainCourseRelevanceText: "课程核心：使用罗盘准确确定房屋的坐山/朝向（例如 {mountainName}）是‘水到奇成’课程中叠加和解读奇门遁甲盘的关键第一步。",
+                    mountainCourseRelevanceText: "课程核心：使用罗盘准确确定房屋的坐山/朝向（例如 {mountainName}）是‘奇门/风水入门’课程中叠加和解读奇门遁甲盘的关键第一步。", // Course name updated
                     qimenGateInThisSector: "此区域奇门",
                     qimenGateInThisSectorSuffix: "(在此基础视图中占据 {palaceName} 宫)",
 
                     mountainRenImplication: "壬山：水之旺位，北方偏西北。用于精确调整。",
                     mountainZiImplication: "子山：正北方，水之帝旺。关键定向。",
                     mountainGuiImplication: "癸山：水之余气，北方偏东北。细节调整。",
-                    // ... other mountain implications ...
                     mountainChouImplication: "丑山：东北方，土中带金。稳定与积累。",
                     mountainGenMImplication: "艮山：正东北，土之本位。学识与静止。",
                     mountainYinImplication: "寅山：东北方，木之初生。新生与活力。",
@@ -779,25 +783,24 @@
                     mountainQianMImplication: "乾山：正西北，金之本位。领导与天运。",
                     mountainHaiImplication: "亥山：西北方，水之初生。智慧与流动。",
 
-
                     howToUseTitle: "如何使用此应用", aboutWuXingTitle: "关于五行", aboutDirectionsTitle: "关于方位、罗盘与二十四山",
                     aboutAppTitle: "关于此应用与课程后续", glossaryTitle: "术语表",
                     howToUseContent: `<p>欢迎使用后天八卦与奇门遁甲基础学习工具！</p><ul><li><strong>点击八卦单元格：</strong>查看该宫位的详细信息。</li><li><strong>切换奇门八门：</strong>在八卦图上叠加显示各宫对应的原始八门。</li><li><strong>切换二十四山：</strong>将每个八卦宫位细分为三个山向。点击具体的山向可查看其详细信息。</li><li><strong>信息面板：</strong>点击单元格或山向后，右侧会弹出信息面板。</li><li><strong>语言切换：</strong>使用页面顶部的语言切换器选择显示语言。</li></ul>`,
                     aboutWuXingContent: `<h4>五行 (Wǔ Xíng)</h4><p>五行（水、木、火、土、金）是中国哲学中描述物质世界相互作用的基本概念。它们之间存在相生和相克的关系：</p><p><strong>相生 (Xiāng Shēng):</strong> <span class="wuxing-diagram-placeholder" data-diagram-type="generating" aria-label="五行相生图：水生木，木生火，火生土，土生金，金生水">水 → 木 → 火 → 土 → 金 → 水</span></p><p><strong>相克 (Xiāng Kè):</strong> <span class="wuxing-diagram-placeholder" data-diagram-type="controlling" aria-label="五行相克图：水克火，火克金，金克木，木克土，土克水">水 ✗ 火 ✗ 金 ✗ 木 ✗ 土 ✗ 水</span></p>`,
                     aboutDirectionsContent: `<h4>方位、罗盘 (Luópán) 与二十四山 (Èrshísì Shān)</h4><p>后天八卦定义了八个基本方位，每个方位覆盖45度。为了更精确，每个方位被细分为三个“山”，共二十四山，每山15度。例如，北方 (坎宫) 包含壬、子、癸三山。<span class="luopan-subdivision-placeholder" aria-label="八卦方位细分为二十四山的示意图"></span> 罗盘是精确测量这些方位和山向的关键工具。</p>`,
-                    aboutAppContent: `<h4>关于此应用与‘水到奇成’课程后续步骤</h4><p>本应用旨在帮助您熟悉后天八卦、五行基础以及奇门遁甲八门在其原始宫位的基本概念。这为“水到奇成”课程打下坚实的基础。</p><p>在“水到奇成”课程中，您将学习动态奇门盘、识别“四害”及其实际应用。</p>`,
+                    aboutAppContent: `<h4>关于此应用与‘奇门/风水入门’课程后续步骤</h4><p>本应用旨在帮助您熟悉后天八卦、五行基础以及奇门遁甲八门在其原始宫位的基本概念。这为“奇门/风水入门”课程打下坚实的基础。</p><p>在“奇门/风水入门”课程中，您将学习动态奇门盘、识别“四害”及其实际应用。</p>`, // Course name updated
                     glossaryContent: `<h4>术语表</h4><dl><dt>后天八卦 (Hòutiān Bāguà)</dt><dd>空间与时间周期的描述序列。</dd><dt>五行 (Wǔ Xíng)</dt><dd>水、木、火、土、金五种元素及其互动。</dd><dt>奇门遁甲 (Qímén Dùnjiǎ)</dt><dd>古代预测与决策术数。</dd><dt>八门 (Bā Mén)</dt><dd>奇门中的八个主要“门”。</dd><dt>二十四山 (Èrshísì Shān)</dt><dd>罗盘360度细分为24等份，每份15度。</dd></dl>`,
-                    // Section Titles in Info Panel
+                    
                     palaceInfoSection: "宫位信息",
-                    wuXingInfoSection: "五行信息",
-                    qimenGateInfoSection: "奇门八门信息",
+                    wuXingInfoSection: "五行信息", // Used as section title in panel
+                    qimenGateInfoSection: "八门信息", // Updated
                     mountainInfoSection: "山向信息",
                     parentPalaceBriefSection: "所属宫位 (简要)"
                 },
                 en: {
-                    appTitle: "Later Heaven Ba Gua / Nine Palaces Grid Foundations", courseName: "Shui Dao Qi Cheng Course",
+                    appTitle: "Later Heaven Ba Gua / Nine Palaces Foundations", courseName: "Qimen / FengShui Foundations Course", // Updated
                     langSwitchLabel: "Language:",
-                    showQimenGates: "Show Qimen Gates", hideQimenGates: "Hide Qimen Gates",
+                    showQimenGates: "Show Qimen Gates", hideQimenGates: "Hide Qimen Gates", // "Gates" retained for button consistency, panel will show "Doors"
                     show24Mountains: "Show 24 Mountains", hide24Mountains: "Hide 24 Mountains",
                     infoPanelClose: "Close", zhongGongLabel: "Central Palace", qimenStarSymbol: "★",
                     infoPanelTitleDefault: "Information",
@@ -807,55 +810,73 @@
                     palaceXun: "Xun", palaceLi: "Li", palaceKun: "Kun", palaceZhen: "Zhen", palaceZhonggong: "Zhong Gong", palaceDui: "Dui", palaceGen: "Gen", palaceKan: "Kan", palaceQian: "Qian",
                     dirSE: "Southeast", dirS: "South", dirSW: "Southwest", dirE: "East", dirCenter: "Center", dirW: "West", dirNE: "Northeast", dirN: "North", dirNW: "Northwest",
 
-                    palaceXunDirDetail: "Southeast (conceptually encompassing Chen, Xun, Si mountains for precise Feng Shui orientation)",
-                    palaceLiDirDetail: "South (conceptually encompassing Bing, Wu, Ding mountains for precise Feng Shui orientation)",
-                    palaceKunDirDetail: "Southwest (conceptually encompassing Wei, Kun, Shen mountains for precise Feng Shui orientation)",
-                    palaceZhenDirDetail: "East (conceptually encompassing Jia, Mao, Yi mountains for precise Feng Shui orientation)",
-                    palaceDuiDirDetail: "West (conceptually encompassing Geng, You, Xin mountains for precise Feng Shui orientation)",
-                    palaceGenDirDetail: "Northeast (conceptually encompassing Chou, Gen, Yin mountains for precise Feng Shui orientation)",
-                    palaceKanDirDetail: "North (conceptually encompassing Ren, Zi, Gui mountains for precise Feng Shui orientation)",
-                    palaceQianDirDetail: "Northwest (conceptually encompassing Xu, Qian, Hai mountains for precise Feng Shui orientation)",
+                    palaceXunDirDetail: "Southeast (conceptually encompassing Chen（辰）, Xun（巽）, Si（巳） mountains for precise Feng Shui orientation)", // Updated
+                    palaceLiDirDetail: "South (conceptually encompassing Bing（丙）, Wu（午）, Ding（丁） mountains for precise Feng Shui orientation)", // Updated
+                    palaceKunDirDetail: "Southwest (conceptually encompassing Wei（未）, Kun（坤）, Shen（申） mountains for precise Feng Shui orientation)", // Updated
+                    palaceZhenDirDetail: "East (conceptually encompassing Jia（甲）, Mao（卯）, Yi（乙） mountains for precise Feng Shui orientation)", // Updated
+                    palaceDuiDirDetail: "West (conceptually encompassing Geng（庚）, You（酉）, Xin（辛） mountains for precise Feng Shui orientation)", // Updated
+                    palaceGenDirDetail: "Northeast (conceptually encompassing Chou（丑）, Gen（艮）, Yin（寅） mountains for precise Feng Shui orientation)", // Updated
+                    palaceKanDirDetail: "North (conceptually encompassing Ren（壬）, Zi（子）, Gui（癸） mountains for precise Feng Shui orientation)", // Updated
+                    palaceQianDirDetail: "Northwest (conceptually encompassing Xu（戌）, Qian（乾）, Hai（亥） mountains for precise Feng Shui orientation)", // Updated
 
                     elementWater: "Water", elementWood: "Wood", elementFire: "Fire", elementEarth: "Earth", elementMetal: "Metal",
 
-                    qualitiesXun: "Xun represents Wind, entry, and obedience.", qualitiesLi: "Li represents Fire, brightness, and beauty.",
-                    qualitiesKun: "Kun represents Earth, receptivity, and nourishment.", qualitiesZhen: "Zhen represents Thunder, action, and initiative.",
-                    qualitiesDui: "Dui represents Marsh, joy, and speech.", qualitiesGen: "Gen represents Mountain, stillness, and stability.",
-                    qualitiesKan: "Kan represents Water, peril, and wisdom.", qualitiesQian: "Qian represents Heaven, strength, and leadership.",
+                    qualitiesXun: "Xun represents Wind, entry, and obedience.", 
+                    qualitiesLi: "Li represents Fire, brightness, and beauty.",
+                    qualitiesKun: "Kun represents Earth, receptivity, and nourishment.", 
+                    qualitiesZhen: "Zhen represents Thunder, action, and initiative.",
+                    qualitiesDui: "Dui represents Marsh, joy, and speech.", 
+                    qualitiesGen: "Gen represents Mountain, cultivate, and stability.", // Updated
+                    qualitiesKan: "Kan represents Water, peril, and wisdom.", 
+                    qualitiesQian: "Qian represents Heaven, strength, and leadership.",
 
                     enhanceXun: "The Wood element in the Southeast can enhance growth and development.",
                     enhanceLi: "The Fire element in the South can enhance fame and recognition.",
                     enhanceKun: "The Earth element in the Southwest can enhance stability and relationships.",
                     enhanceZhen: "The Wood element in the East can enhance motivation and new beginnings.",
-                    enhanceDui: "The Metal element in the West can enhance completion and children's luck.",
+                    enhanceDui: "The metal element in the west can enhance the ability of expression and the aura of joy.", // Updated
                     enhanceGen: "The Earth element in the Northeast can enhance knowledge and self-cultivation.",
-                    enhanceKan: "The Water element in the North can enhance career flow and wisdom.",
-                    enhanceQian: "The Metal element in the Northwest can enhance benefactor luck and authority.",
+                    enhanceKan: "The Water element in the North can enhance stress resistance and wisdom.", // Updated
+                    enhanceQian: "The metal element in the northwest can enhance the momentum of working hard and striving for progress as well as authority.", // Updated
 
-                    wuXingInteractionsTitle: "Wu Xing Interactions",
-                    generatesLabel: "Generates (shēng)", controlsLabel: "Controls (kè)",
-                    isGeneratedByLabel: "Is Generated By (bèi shēng)", isControlledByLabel: "Is Controlled By (bèi kè)",
+                    wuXingInteractionsTitle: "Five Elements Interactions", // Updated
+                    generatesLabel: "Generates (shēng)", 
+                    controlsLabel: "Restricts (kè)", // Updated (was Controls)
+                    isGeneratedByLabel: "Is Generated By (bèi shēng)", 
+                    isControlledByLabel: "Is Restricted By (bèi kè)", // Updated (was Is Controlled By)
                     
-                    gateXiu: "休门 (Xiū Mén) - Rest Gate", gateSheng: "生门 (Shēng Mén) - Life Gate", gateShang: "伤门 (Shāng Mén) - Harm Gate",
-                    gateDu: "杜门 (Dù Mén) - Delusion Gate", gateJing: "景门 (Jǐng Mén) - Scenery Gate", gateSi: "死门 (Sǐ Mén) - Death Gate",
-                    gateJing2: "惊门 (Jīng Mén) - Fear Gate", gateKai: "开门 (Kāi Mén) - Open Gate",
+                    gateXiu: "休门 (Xiū Mén) - Rest Door", // Updated
+                    gateSheng: "生门 (Shēng Mén) - Growth Door", // Updated
+                    gateShang: "伤门 (Shāng Mén) - Injury Door", // Updated
+                    gateDu: "杜门 (Dù Mén) - Delusion Door", // Updated
+                    gateJing: "景门 (Jǐng Mén) - Scenery Door", // Updated
+                    gateSi: "死门 (Sǐ Mén) - Death Door", // Updated
+                    gateJing2: "惊门 (Jīng Mén) - Fear Door", // Updated
+                    gateKai: "开门 (Kāi Mén) - Open Door", // Updated
 
-                    gateXiuShort: "Rest", gateShengShort: "Life", gateShangShort: "Harm", gateDuShort: "Delu.", // Abbreviated for space
-                    gateJingShort: "Scen.", gateSiShort: "Death", gateJing2Short: "Fear", gateKaiShort: "Open",
+                    gateXiuShort: "Rest", 
+                    gateShengShort: "Growth", // Updated
+                    gateShangShort: "Injury", // Updated
+                    gateDuShort: "Delu.", 
+                    gateJingShort: "Scen.", 
+                    gateSiShort: "Death", 
+                    gateJing2Short: "Fear", 
+                    gateKaiShort: "Open",
 
-                    gateXiuProperties: "The Rest Gate is generally auspicious for rest, recuperation, and support from benefactors.",
-                    gateShengProperties: "The Life Gate is generally auspicious for wealth, business, and vitality.",
-                    gateShangProperties: "The Harm Gate is often associated with injury, competition, and demands.",
-                    gateDuProperties: "The Delusion Gate is often associated with hiding, obstruction, and technical skills.",
-                    gateJingProperties: "The Scenery Gate is often associated with documents, planning, and fire.",
-                    gateSiProperties: "The Death Gate is often associated with endings, mourning, and stillness.",
-                    gateJing2Properties: "The Fear Gate is often associated with disputes, legal issues, and panic.",
-                    gateKaiProperties: "The Open Gate is generally auspicious for new ventures, travel, and meeting important people.",
+                    gateXiuProperties: "The Rest Door is generally auspicious for rest, recuperation, restoration and spiritual cultivation.", // Updated
+                    gateShengProperties: "The Growth Door is generally auspicious for wealth, business, and vitality.", // Updated "Life Gate" to "Growth Door"
+                    gateShangProperties: "The Injury Door is often associated with injury, competition, and demands.", // Updated "Harm Gate" to "Injury Door"
+                    gateDuProperties: "The Delusion Door is often associated with hiding, obstruction, and technical skills.", // Updated "Delusion Gate" to "Delusion Door"
+                    gateJingProperties: "The Scenery Door is often associated with documents, planning, visions and beauty.", // Updated
+                    gateSiProperties: "The Death Door is often associated with endings, real estate and stillness.", // Updated
+                    gateJing2Properties: "The Fear Door is often associated with eloquence, disputes, legal issues, and panic.", // Updated
+                    gateKaiProperties: "The Open Door is generally auspicious for new ventures, travel, and meeting important people.", // Updated "Open Gate" to "Open Door"
 
                     qimenInteractionTitle: "Qimen Conceptual Interaction",
-                    qimenFundamentalState: "Fundamental State: In this view, the {gateName} is in its home palace ({palaceName}), where its element ({gateElement}) aligns with the palace's element ({palaceElement}).",
-                    qimenCourseInsight: "Course Insight: The 'Shui Dao Qi Cheng' course teaches how this Gate's energy dynamically changes when it moves to *other* palaces in a time-specific Qimen chart. Identifying unfavorable interactions or conditions ('四害 - Si Hai' / 'problem indicators') in those dynamic contexts is key and will be covered in the course.",
-                    gateOriginalPalace: "Originates from Palace", derivedElement: "Derived Element",
+                    qimenFundamentalState: "Fundamental State: In this view, the {gateName} is in its home palace ({palaceName}), where its element ({gateElement}) aligns with the palace's element ({palaceElement}).", // {gateName} will use "Door"
+                    qimenCourseInsight: "Course Insight: The introductory course of Qimen Dunjia and Fengshui systematically explains the core basic theories of Qimen Dunjia and Fengshui geomancy. It deeply integrates the system of judging good and bad luck in Qimen Dunjia into the practice of Fengshui geomancy. Through the comprehensive analysis of human affairs and environmental factors, it helps students master practical methods to seek good fortune and avoid bad luck, and achieve the improvement of personal wealth, career and health luck.", // Updated
+                    gateOriginalPalace: "Originates from Palace", // Retained 'Palace' for clarity with Ba Gua context. If "Door Original Palace", it might be confusing.
+                    derivedElement: "Derived Element",
 
                     mountainRen: "Ren", mountainZi: "Zi", mountainGui: "Gui", mountainChou: "Chou", mountainGenM: "Gen", mountainYin: "Yin",
                     mountainJia: "Jia", mountainMao: "Mao", mountainYi: "Yi", mountainChen: "Chen", mountainXunM: "Xun", mountainSiM: "Si",
@@ -873,17 +894,16 @@
 
                     mountainParentPalace: "Belongs to", mountainDirectionSuffix: "Direction", mountainApproxDegrees: "Approx. Degrees",
                     mountainInheritedElement: "Primary Element",
-                    mountainInheritedElementNote: "(from {palaceName} Palace). Specific Mountain elemental nuances will be explored in the 'Shui Dao Qi Cheng' course.",
+                    mountainInheritedElementNote: "(from {palaceName} Palace). Specific Mountain elemental nuances will be explored in the 'Qimen / FengShui Foundations' course.", // Course name updated
                     mountainFengShuiImplication: "Feng Shui Implication",
-                    mountainCourseRelevance: "Relevance to 'Shui Dao Qi Cheng' Course",
-                    mountainCourseRelevanceText: "Course Essential: Accurately identifying the Facing/Sitting Mountain (e.g., {mountainName}) with a Luopan (罗盘) is a critical first step in 'Shui Dao Qi Cheng' for overlaying and interpreting the Qimen Dunjia chart.",
-                    qimenGateInThisSector: "Qimen Gate in this Sector",
+                    mountainCourseRelevance: "Relevance to 'Qimen / FengShui Foundations' Course", // Course name updated
+                    mountainCourseRelevanceText: "Course Essential: Accurately identifying the Facing/Sitting Mountain (e.g., {mountainName}) with a Luopan (罗盘) is a critical first step in 'Qimen / FengShui Foundations' for overlaying and interpreting the Qimen Dunjia chart.", // Course name updated
+                    qimenGateInThisSector: "Qimen Door in this Sector", // Updated
                     qimenGateInThisSectorSuffix: "(occupying the {palaceName} Palace in this foundational view).",
 
                     mountainRenImplication: "Ren Mountain: Peak Water energy, North-Northwest. For precise adjustments.",
                     mountainZiImplication: "Zi Mountain: True North, peak Water. Key for orientation.",
                     mountainGuiImplication: "Gui Mountain: Fading Water energy, North-Northeast. Fine-tuning.",
-                     // ... other mountain implications ...
                     mountainChouImplication: "Chou Mountain: Northeast, Earth with Metal. Stability and accumulation.",
                     mountainGenMImplication: "Gen Mountain: True Northeast, Earth's home. Knowledge and stillness.",
                     mountainYinImplication: "Yin Mountain: Northeast, nascent Wood. New beginnings and vitality.",
@@ -906,16 +926,18 @@
                     mountainQianMImplication: "Qian Mountain: True Northwest, Metal's home. Leadership and heavenly luck.",
                     mountainHaiImplication: "Hai Mountain: Northwest, nascent Water. Wisdom and flow.",
 
-                    howToUseTitle: "How to Use This App", aboutWuXingTitle: "About Wu Xing", aboutDirectionsTitle: "About Directions, Luopan & 24 Mountains",
+                    howToUseTitle: "How to Use This App", aboutWuXingTitle: "About Five Elements", // Updated
+                    aboutDirectionsTitle: "About Directions, Luopan & 24 Mountains",
                     aboutAppTitle: "About this App & Course Next Steps", glossaryTitle: "Glossary of Terms",
-                    howToUseContent: `<p>Welcome to the Later Heaven Ba Gua & Qimen Dunjia Foundations learning tool!</p><ul><li><strong>Click a Ba Gua Cell:</strong> View detailed information.</li><li><strong>Toggle Qimen Gates:</strong> Overlay original Eight Gates.</li><li><strong>Toggle 24 Mountains:</strong> Subdivide palaces into Mountains. Click a Mountain for details.</li><li><strong>Information Panel:</strong> Appears on click.</li><li><strong>Language Switcher:</strong> Select display language.</li></ul>`,
-                    aboutWuXingContent: `<h4>Wu Xing (五行)</h4><p>The Five Elements (Water, Wood, Fire, Earth, Metal) describe interactions in the material world. They have generating and controlling cycles:</p><p><strong>Generating Cycle (相生 Xiāng Shēng):</strong> <span class="wuxing-diagram-placeholder" data-diagram-type="generating" aria-label="Wu Xing Generating Cycle: Water -> Wood -> Fire -> Earth -> Metal -> Water">Water → Wood → Fire → Earth → Metal → Water</span></p><p><strong>Controlling Cycle (相克 Xiāng Kè):</strong> <span class="wuxing-diagram-placeholder" data-diagram-type="controlling" aria-label="Wu Xing Controlling Cycle: Water X Fire X Metal X Wood X Earth X Water">Water ✗ Fire ✗ Metal ✗ Wood ✗ Earth ✗ Water</span></p>`,
+                    howToUseContent: `<p>Welcome to the Later Heaven Ba Gua & Qimen Dunjia Foundations learning tool!</p><ul><li><strong>Click a Ba Gua Cell:</strong> View detailed information.</li><li><strong>Toggle Qimen Gates:</strong> Overlay original Eight Doors.</li><li><strong>Toggle 24 Mountains:</strong> Subdivide palaces into Mountains. Click a Mountain for details.</li><li><strong>Information Panel:</strong> Appears on click.</li><li><strong>Language Switcher:</strong> Select display language.</li></ul>`,
+                    aboutWuXingContent: `<h4>Five Elements (五行)</h4><p>The Five Elements (Water, Wood, Fire, Earth, Metal) describe interactions in the material world. They have generating and restricting cycles:</p><p><strong>Generating Cycle (相生 Xiāng Shēng):</strong> <span class="wuxing-diagram-placeholder" data-diagram-type="generating" aria-label="Five Elements Generating Cycle: Water -> Wood -> Fire -> Earth -> Metal -> Water">Water → Wood → Fire → Earth → Metal → Water</span></p><p><strong>Restricting Cycle (相克 Xiāng Kè):</strong> <span class="wuxing-diagram-placeholder" data-diagram-type="controlling" aria-label="Five Elements Restricting Cycle: Water X Fire X Metal X Wood X Earth X Water">Water ✗ Fire ✗ Metal ✗ Wood ✗ Earth ✗ Water</span></p>`, // Updated
                     aboutDirectionsContent: `<h4>Directions, Luopan (罗盘), & 24 Mountains (二十四山)</h4><p>Later Heaven Ba Gua defines 8 directions (45° each). For precision, each is subdivided into 3 "Mountains" (15° each), totaling 24. E.g., North (Kan) has Ren, Zi, Gui Mountains. <span class="luopan-subdivision-placeholder" aria-label="Diagram showing Ba Gua direction subdivided into 24 Mountains"></span> The Luopan is key for measurement.</p>`,
-                    aboutAppContent: `<h4>About this App & 'Shui Dao Qi Cheng' Course Next Steps</h4><p>This app helps you learn Ba Gua, Wu Xing, and basic Qimen Gates, a foundation for the "Shui Dao Qi Cheng" course.</p><p>The course covers dynamic Qimen charts, 'Si Hai' identification, and practical application.</p>`,
-                    glossaryContent: `<h4>Glossary of Terms</h4><dl><dt>Houtian Ba Gua (后天八卦)</dt><dd>Later Heaven sequence for space/time cycles.</dd><dt>Wu Xing (五行)</dt><dd>Theory of five elements: Water, Wood, Fire, Earth, Metal.</dd><dt>Qimen Dunjia (奇门遁甲)</dt><dd>Ancient divination for forecasting/strategy.</dd><dt>Ba Men (八门)</dt><dd>Eight main "Gates" in Qimen.</dd><dt>24 Mountains (二十四山)</dt><dd>Compass divided into 24 segments of 15°.</dd></dl>`,
+                    aboutAppContent: `<h4>About this App & 'Qimen / FengShui Foundations' Course Next Steps</h4><p>This app helps you learn Ba Gua, Five Elements, and basic Qimen Eight Doors, a foundation for the "Qimen / FengShui Foundations" course.</p><p>The course covers dynamic Qimen charts, 'Si Hai' identification, and practical application.</p>`, // Updated
+                    glossaryContent: `<h4>Glossary of Terms</h4><dl><dt>Houtian Ba Gua (后天八卦)</dt><dd>Later Heaven sequence for space/time cycles.</dd><dt>Wu Xing (五行)</dt><dd>Theory of five elements: Water, Wood, Fire, Earth, Metal.</dd><dt>Qimen Dunjia (奇门遁甲)</dt><dd>Ancient divination for forecasting/strategy.</dd><dt>Ba Men (八门)</dt><dd>Eight main "Doors" in Qimen.</dd><dt>24 Mountains (二十四山)</dt><dd>Compass divided into 24 segments of 15°.</dd></dl>`, // Updated Ba Men def
+                    
                     palaceInfoSection: "Palace Information",
-                    wuXingInfoSection: "Wu Xing Information",
-                    qimenGateInfoSection: "Qimen Gate Information",
+                    wuXingInfoSection: "Five Elements Information", // Updated
+                    qimenGateInfoSection: "Eight Door Information", // Updated
                     mountainInfoSection: "Mountain Information",
                     parentPalaceBriefSection: "Parent Palace (Brief)"
                 }
@@ -951,25 +973,23 @@
             localStorage.setItem('fengshuiAppLang', lang);
             document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
             
-            // Update button states
             langZhButton.classList.toggle('active', lang === 'zh');
             langZhButton.setAttribute('aria-pressed', lang === 'zh');
             langEnButton.classList.toggle('active', lang === 'en');
             langEnButton.setAttribute('aria-pressed', lang === 'en');
             
             updateAllTexts();
-            renderGrid(); // Re-render grid for text changes
-            if (appData.settings.selectedElementId) { // If panel is open, re-render its content
+            renderGrid(); 
+            if (appData.settings.selectedElementId) { 
                 renderInfoPanel(appData.settings.selectedElementId);
             }
         }
 
         function updateAllTexts() {
-            document.title = T('appTitle'); // Update page title
+            document.title = T('appTitle'); 
             appTitleMain.textContent = T('appTitle');
             courseNameFooter.textContent = T('courseName');
 
-            // Update toggle button texts based on their state
             qimenToggleButton.textContent = T(appData.settings.qimenOverlayActive ? qimenToggleButton.dataset.translateKeyOn : qimenToggleButton.dataset.translateKeyOff);
             mountainsToggleButton.textContent = T(appData.settings.mountainsOverlayActive ? mountainsToggleButton.dataset.translateKeyOn : mountainsToggleButton.dataset.translateKeyOff);
             infoPanelCloseButton.setAttribute('aria-label', T('infoPanelClose'));
@@ -978,16 +998,14 @@
             document.querySelectorAll('[data-translate-key]').forEach(el => {
                 const key = el.dataset.translateKey;
                 if (el.dataset.htmlContent === "true") {
-                    el.innerHTML = T(key); // For elements with HTML content
-                    // After setting HTML, re-initialize SVG placeholders if any
+                    el.innerHTML = T(key); 
                     if (key === 'aboutWuXingContent' || key === 'aboutDirectionsContent') {
                         initializeSvgPlaceholders(el);
                     }
-                } else if (key && !el.classList.contains('control-button')) { // control buttons handled separately
+                } else if (key && !el.classList.contains('control-button')) { 
                     el.textContent = T(key);
                 }
             });
-             // Update language switcher label explicitly as it's a span next to buttons
             const langLabel = document.querySelector('.language-switcher span');
             if (langLabel) langLabel.textContent = T('langSwitchLabel');
         }
@@ -995,7 +1013,7 @@
 
         // --- Grid Rendering ---
         function renderGrid() {
-            baguaGrid.innerHTML = ''; // Clear existing grid
+            baguaGrid.innerHTML = ''; 
             baguaGrid.classList.toggle('mountains-overlay-active', appData.settings.mountainsOverlayActive);
 
             appData.palaceOrder.forEach(palaceId => {
@@ -1008,7 +1026,7 @@
 
                 if (palaceId === 'zhonggong') {
                     cell.classList.add('zhonggong');
-                    cell.setAttribute('tabindex', '-1'); // Not focusable
+                    cell.setAttribute('tabindex', '-1'); 
                     const zhongGongLabel = document.createElement('span');
                     zhongGongLabel.textContent = T('zhongGongLabel');
                     if (appData.settings.qimenOverlayActive) {
@@ -1025,14 +1043,13 @@
                             const segment = document.createElement('div');
                             segment.classList.add('mountain-segment');
                             segment.dataset.mountainId = mountainId;
-                            segment.dataset.palaceId = palaceId; // Keep parent palace ID for context
+                            segment.dataset.palaceId = palaceId; 
 
                             const mountainChar = document.createElement('span');
                             mountainChar.classList.add('mountain-char');
                             mountainChar.textContent = T(appData.mountains[mountainId].nameKey);
                             segment.appendChild(mountainChar);
                             
-                            // Condensed palace info
                             const palaceInfoCondensed = document.createElement('div');
                             palaceInfoCondensed.classList.add('palace-info-condensed');
                             palaceInfoCondensed.innerHTML = `
@@ -1051,10 +1068,9 @@
                             cell.appendChild(segment);
                         });
                     } else {
-                        // Default Ba Gua cell content
                         const trigramSymbol = document.createElement('span');
                         trigramSymbol.classList.add('trigram-symbol');
-                        trigramSymbol.setAttribute('aria-hidden', 'true'); // Decorative if name is present
+                        trigramSymbol.setAttribute('aria-hidden', 'true'); 
                         trigramSymbol.textContent = palace.trigramSymbol;
                         cell.appendChild(trigramSymbol);
 
@@ -1072,7 +1088,12 @@
                             const gate = appData.gates[palace.gateId];
                             const gateNameOverlay = document.createElement('span');
                             gateNameOverlay.classList.add('gate-name-overlay');
-                            gateNameOverlay.textContent = T(gate.nameKey).split('(')[0].trim(); // Show Chinese part or first part if no Pinyin
+                            // Use Chinese part of nameKey for overlay, or full shortNameKey for EN to ensure Door name part is there
+                            let overlayText = T(gate.nameKey).split('(')[0].trim();
+                            if (getLang() === 'en') {
+                                overlayText = T(gate.shortNameKey);
+                            }
+                            gateNameOverlay.textContent = overlayText;
                             cell.appendChild(gateNameOverlay);
                         }
                     }
@@ -1100,8 +1121,8 @@
 
         // --- Interaction Handling ---
         function handleCellClick(event) {
-            let target = event.currentTarget; // For keydown, currentTarget is the cell
-            if (event.type === 'click') target = event.target.closest('.grid-cell, .mountain-segment'); // For click, find closest interactive element
+            let target = event.currentTarget; 
+            if (event.type === 'click') target = event.target.closest('.grid-cell, .mountain-segment'); 
             
             if (!target || target.classList.contains('zhonggong')) return;
 
@@ -1109,12 +1130,7 @@
             if (target.classList.contains('mountain-segment')) {
                 elementId = `mountain-${target.dataset.mountainId}`;
             } else if (target.classList.contains('grid-cell') && target.dataset.palaceId) {
-                 // If mountains are active, but user clicks general cell area (not a segment),
-                 // default to selecting the palace, unless it's an already subdivided cell.
-                 // This logic might need refinement if we want clicking "between" segments to do nothing.
-                 // For now, if mountains active and it's a cell, it's likely a non-mountain part of that cell, or a click that didn't land on a segment.
-                 // The most reliable is to check if a mountainId is present on the clicked target.
-                if (appData.settings.mountainsOverlayActive && target.dataset.mountainId) {
+                if (appData.settings.mountainsOverlayActive && target.dataset.mountainId) { // Should not happen if logic is correct
                      elementId = `mountain-${target.dataset.mountainId}`;
                 } else {
                      elementId = `palace-${target.dataset.palaceId}`;
@@ -1123,7 +1139,7 @@
 
             if (!elementId) return;
 
-            if (appData.settings.selectedElementId === elementId) { // Clicked same element again
+            if (appData.settings.selectedElementId === elementId) { 
                 hideInfoPanel();
             } else {
                 appData.settings.selectedElementId = elementId;
@@ -1135,28 +1151,26 @@
 
         // --- Info Panel ---
         function renderInfoPanel(elementId) {
-            infoPanelContent.innerHTML = ''; // Clear previous content
+            infoPanelContent.innerHTML = ''; 
             const [type, id] = elementId.split('-');
             let panelTitle = T('infoPanelTitleDefault');
-
             let html = '';
 
             if (type === 'palace') {
                 const palace = appData.palaces[id];
                 panelTitle = T('infoPanelTitlePalace', { palaceName: T(palace.nameKey) });
                 html += `<span class="trigram-symbol-large" aria-hidden="true">${palace.trigramSymbol}</span>`;
-                html += `<h2>${T(palace.nameKey)} (${T(palace.dirKey)})</h2>`;
+                // Panel Title is part of the html string now
+                html += `<h2 id="info-panel-title">${panelTitle}</h2>`;
                 
-                // Ba Gua Info
                 html += `<h3>${T('palaceInfoSection')}</h3>`;
-                html += `<p><strong>${T('palaceNameKey', {name: T(palace.nameKey)})}</strong></p>`; // Assuming a generic 'palaceNameKey'
-                html += `<p><strong>${T('directionLabel')}:</strong> ${T(palace.dirDetailKey || palace.dirKey)}</p>`; // Added labels
+                html += `<p><strong>${T('palaceNameKey', {name: T(palace.nameKey)})}</strong></p>`;
+                html += `<p><strong>${T('directionLabel')}:</strong> ${T(palace.dirDetailKey || palace.dirKey)}</p>`;
                 const palaceElement = appData.elements[palace.elementId];
                 html += `<p><strong>${T('elementLabel')}:</strong> ${T(palaceElement.nameKey)}</p>`;
                 if (palace.qualitiesKey) html += `<p><strong>${T('qualitiesLabel')}:</strong> ${T(palace.qualitiesKey)}</p>`;
                 if (palace.enhancementKey) html += `<p><strong>${T('enhancementPotentialLabel')}:</strong> ${T(palace.enhancementKey)}</p>`;
 
-                // Wu Xing Interactions
                 html += `<h3>${T('wuXingInteractionsTitle')}</h3>`;
                 html += `<ul>`;
                 html += `<li><strong>${T('generatesLabel')}:</strong> ${T(palaceElement.nameKey)} ${T('generatesWording')} ${T(appData.elements[palaceElement.generates].nameKey)} (${T(palaceElement.nameKey).charAt(0)}生${T(appData.elements[palaceElement.generates].nameKey).charAt(0)})</li>`;
@@ -1165,14 +1179,13 @@
                 html += `<li><strong>${T('isControlledByLabel')}:</strong> ${T(palaceElement.nameKey)} ${T('isControlledByWording')} ${T(appData.elements[palaceElement.controlledBy].nameKey)} (${T(appData.elements[palaceElement.controlledBy].nameKey).charAt(0)}克${T(palaceElement.nameKey).charAt(0)})</li>`;
                 html += `</ul>`;
 
-                // Qimen Gate Info (if overlay active)
                 if (appData.settings.qimenOverlayActive && palace.gateId) {
                     const gate = appData.gates[palace.gateId];
                     const gateElement = appData.elements[gate.elementId];
                     html += `<hr>`;
                     html += `<h3>${T('qimenGateInfoSection')}</h3>`;
                     html += `<p><strong>${T('gateNameLabel')}:</strong> ${T(gate.nameKey)}</p>`;
-                    html += `<p><strong>${T('gateOriginalPalace')}:</strong> ${T(appData.palaces[gate.originalPalaceId].nameKey)}. <strong>${T('derivedElement')}:</strong> ${T(gateElement.nameKey)}.</p>`;
+                    html += `<p><strong>${T(getLang() === 'en' ? 'doorOriginalPalaceLabel' : 'gateOriginalPalace')}:</strong> ${T(appData.palaces[gate.originalPalaceId].nameKey)}. <strong>${T('derivedElement')}:</strong> ${T(gateElement.nameKey)}.</p>`;
                     html += `<p><strong>${T('gatePropertiesLabel')}:</strong> ${T(gate.propertiesKey)}</p>`;
                     html += `<h4>${T('qimenInteractionTitle')}</h4>`;
                     html += `<p>${T('qimenFundamentalState', { gateName: T(gate.nameKey), palaceName: T(palace.nameKey), gateElement: T(gateElement.nameKey), palaceElement: T(palaceElement.nameKey) })}</p>`;
@@ -1185,9 +1198,8 @@
                 const parentPalaceElement = appData.elements[parentPalace.elementId];
                 panelTitle = T('infoPanelTitleMountain', { mountainName: T(mountain.fullNameKey) });
 
-                html += `<h2>${T(mountain.fullNameKey)}</h2>`;
+                html += `<h2 id="info-panel-title">${panelTitle}</h2>`;
                 
-                // Mountain Info
                 html += `<h3>${T('mountainInfoSection')}</h3>`;
                 html += `<p><strong>${T('mountainParentPalace')}:</strong> ${T(parentPalace.nameKey)} (${T(parentPalace.dirKey)} ${T('mountainDirectionSuffix')})</p>`;
                 html += `<p><strong>${T('mountainApproxDegrees')}:</strong> ${mountain.degreeRange}</p>`;
@@ -1195,15 +1207,13 @@
                 html += `<p><strong>${T('mountainFengShuiImplication')}:</strong> ${T(mountain.implicationKey)}</p>`;
                 html += `<p><strong>${T('mountainCourseRelevance')}:</strong> ${T('mountainCourseRelevanceText', { mountainName: T(mountain.nameKey) })}</p>`;
 
-                // Combined Overlay: Parent Ba Gua and Qimen Info
-                let detailsOpen = !(appData.settings.qimenOverlayActive); // Open if Qimen is not active
+                let detailsOpen = !(appData.settings.qimenOverlayActive); 
 
                 html += `<details class="info-panel-section-collapsible" ${detailsOpen ? 'open' : ''}>`;
                 html += `<summary>${T('parentPalaceBriefSection')}</summary>`;
-                html += `<div>`; // Content wrapper for collapsible section
+                html += `<div>`; 
                 html += `<p><span class="trigram-symbol-large" style="font-size:2em;float:none;display:inline-block;">${parentPalace.trigramSymbol}</span> <strong>${T(parentPalace.nameKey)}</strong> - ${T(parentPalace.dirKey)}</p>`;
                 html += `<p><strong>${T('elementLabel')}:</strong> ${T(parentPalaceElement.nameKey)}</p>`;
-                // Brief Wu Xing for parent palace
                 html += `<p><em>${T('wuXingInteractionsTitleBrief')}:</em> ${T(parentPalaceElement.nameKey)} ${T('generatesWording')} ${T(appData.elements[parentPalaceElement.generates].nameKey)}, ${T('controlsWording')} ${T(appData.elements[parentPalaceElement.controls].nameKey)}.</p>`;
                 html += `</div></details>`;
                 
@@ -1213,11 +1223,11 @@
                     const gateElement = appData.elements[gate.elementId];
                     const palaceElementForGateContext = appData.elements[parentPalace.elementId];
                     
-                    html += `<details class="info-panel-section-collapsible" open>`; // Qimen always open if active
+                    html += `<details class="info-panel-section-collapsible" open>`; 
                     html += `<summary>${T('qimenGateInfoSection')}</summary>`;
                     html += `<div>`;
-                    html += `<p><strong>${T('qimenGateInThisSector')}:</strong> ${T(gate.nameKey)} ${T('qimenGateInThisSectorSuffix', { palaceName: T(parentPalace.nameKey) })}</p>`;
-                    html += `<p><strong>${T('gateOriginalPalace')}:</strong> ${T(appData.palaces[gate.originalPalaceId].nameKey)}. <strong>${T('derivedElement')}:</strong> ${T(gateElement.nameKey)}.</p>`;
+                    html += `<p><strong>${T(getLang() === 'en' ? 'qimenDoorInThisSectorLabel' : 'qimenGateInThisSector')}:</strong> ${T(gate.nameKey)} ${T(getLang() === 'en' ? 'qimenDoorSuffixText' : 'qimenGateInThisSectorSuffix', { palaceName: T(parentPalace.nameKey) })}</p>`;
+                    html += `<p><strong>${T(getLang() === 'en' ? 'doorOriginalPalaceLabel' : 'gateOriginalPalace')}:</strong> ${T(appData.palaces[gate.originalPalaceId].nameKey)}. <strong>${T('derivedElement')}:</strong> ${T(gateElement.nameKey)}.</p>`;
                     html += `<p><strong>${T('gatePropertiesLabel')}:</strong> ${T(gate.propertiesKey)}</p>`;
                     html += `<h4>${T('qimenInteractionTitle')}</h4>`;
                     html += `<p>${T('qimenFundamentalState', { gateName: T(gate.nameKey), palaceName: T(parentPalace.nameKey), gateElement: T(gateElement.nameKey), palaceElement: T(palaceElementForGateContext.nameKey) })}</p>`;
@@ -1225,28 +1235,13 @@
                     html += `</div></details>`;
                 }
             }
-            
-            // Attempt to create a title element if one doesn't exist, or update it
-            let h2Title = infoPanelContent.querySelector('#info-panel-title');
-            if (!h2Title) {
-                h2Title = document.createElement('h2');
-                h2Title.id = 'info-panel-title';
-                infoPanelContent.appendChild(h2Title); // Prepend if possible or manage order
-            }
-            h2Title.textContent = panelTitle; // This is not working, panelTitle is set, but this line does not display it.
-                                              // The content is being replaced by innerHTML below.
-                                              // So, the H2 must be part of the `html` string.
-            
-            // The title must be part of the html string if we are using innerHTML to set the content.
-            // The current logic creates the h2 outside the html string then overwrites it.
-            // Let's adjust. For now, the title is part of the `html` string built above.
-            infoPanelContent.innerHTML = html; // This replaces everything, including any manually added h2Title.
+            infoPanelContent.innerHTML = html; 
         }
 
 
         function showInfoPanel() {
             infoPanelOverlay.classList.add('visible');
-            infoPanelCloseButton.focus(); // Focus on close button for accessibility
+            infoPanelCloseButton.focus(); 
             document.addEventListener('keydown', handleEscapeKey);
         }
 
@@ -1255,8 +1250,6 @@
             appData.settings.selectedElementId = null;
             updateSelectedCellVisual();
             document.removeEventListener('keydown', handleEscapeKey);
-            // Return focus to the element that opened the panel, if possible.
-            // This is complex to track without more state, so for now, just close.
         }
 
         function handleEscapeKey(event) {
@@ -1266,7 +1259,6 @@
         }
         
         function addStaticContentTranslations() {
-            // For Wu Xing Interactions in Ba Gua Mode panel
             appData.content.zh.palaceNameKey = "卦宫名称";
             appData.content.en.palaceNameKey = "Palace Name";
             appData.content.zh.directionLabel = "方向";
@@ -1279,21 +1271,23 @@
             appData.content.en.enhancementPotentialLabel = "Enhancement Potential";
             appData.content.zh.generatesWording = "生";
             appData.content.en.generatesWording = "generates";
-            appData.content.zh.controlsWording = "克";
-            appData.content.en.controlsWording = "controls";
+            appData.content.zh.controlsWording = "克"; // This is 克
+            appData.content.en.controlsWording = "restricts"; // Updated based on diff logic for English
             appData.content.zh.isGeneratedByWording = "被";
             appData.content.en.isGeneratedByWording = "is generated by";
-            appData.content.zh.isControlledByWording = "被";
-            appData.content.en.isControlledByWording = "is controlled by";
-             appData.content.zh.wuXingInteractionsTitleBrief = "五行简述";
-            appData.content.en.wuXingInteractionsTitleBrief = "Wu Xing Brief";
+            appData.content.zh.isControlledByWording = "被"; // This is 被克
+            appData.content.en.isControlledByWording = "is restricted by"; // Updated based on diff logic for English
+            appData.content.zh.wuXingInteractionsTitleBrief = "五行简述";
+            appData.content.en.wuXingInteractionsTitleBrief = "Five Elements Brief"; // Updated
 
-
-            // For Qimen Gate Info panel
             appData.content.zh.gateNameLabel = "门名称";
-            appData.content.en.gateNameLabel = "Gate Name";
-            appData.content.zh.gatePropertiesLabel = "基本性质"; // Re-use if same
-            appData.content.en.gatePropertiesLabel = "General Properties"; // Re-use if same
+            appData.content.en.gateNameLabel = "Door Name"; // Updated
+            appData.content.zh.gatePropertiesLabel = "基本性质"; 
+            appData.content.en.gatePropertiesLabel = "General Properties"; 
+            appData.content.en.doorOriginalPalaceLabel = "Originates from Palace"; // New for English to use "Door" contextually
+            appData.content.en.qimenDoorInThisSectorLabel = "Qimen Door in this Sector"; // New
+            appData.content.en.qimenDoorSuffixText = "(occupying the {palaceName} Palace in this foundational view)."; // New
+
         }
 
 
@@ -1319,7 +1313,6 @@
                 { from: 'metal', to: 'water' }
             ];
 
-            // Define arrow marker
             const defs = document.createElementNS(svgNS, "defs");
             const marker = document.createElementNS(svgNS, "marker");
             marker.setAttribute("id", "arrowhead-generating");
@@ -1358,7 +1351,6 @@
                 const fromEl = elements.find(e => e.id === arrow.from);
                 const toEl = elements.find(e => e.id === arrow.to);
                 const line = document.createElementNS(svgNS, "line");
-                // Adjust start/end points to be on circle edge
                 const angle = Math.atan2(toEl.y - fromEl.y, toEl.x - fromEl.x);
                 const radius = 20;
                 line.setAttribute("x1", fromEl.x + radius * Math.cos(angle));
@@ -1381,15 +1373,14 @@
             svg.setAttribute("height", "150");
             svg.setAttribute("aria-label", T('wuXingControllingCycleAriaLabel') || "Wu Xing Controlling Cycle Diagram");
 
-            const elements = [ // Same positions as generating for consistency
-                { id: 'water', textKey: 'elementWater', x: 50, y: 150 },  // Bottom-left
-                { id: 'wood', textKey: 'elementWood', x: 30, y: 50 },    // Top-left
-                { id: 'fire', textKey: 'elementFire', x: 150, y: 20 },   // Top-center
-                { id: 'earth', textKey: 'elementEarth', x: 270, y: 50 },  // Top-right
-                { id: 'metal', textKey: 'elementMetal', x: 250, y: 150 } // Bottom-right
+            const elements = [ 
+                { id: 'water', textKey: 'elementWater', x: 50, y: 150 },  
+                { id: 'wood', textKey: 'elementWood', x: 30, y: 50 },    
+                { id: 'fire', textKey: 'elementFire', x: 150, y: 20 },   
+                { id: 'earth', textKey: 'elementEarth', x: 270, y: 50 },  
+                { id: 'metal', textKey: 'elementMetal', x: 250, y: 150 } 
             ];
-            // Controlling: Water > Fire > Metal > Wood > Earth > Water
-            const arrows = [
+            const arrows = [ // Water controls Fire, Fire controls Metal, Metal controls Wood, Wood controls Earth, Earth controls Water
                 { from: 'water', to: 'fire' }, { from: 'fire', to: 'metal' },
                 { from: 'metal', to: 'wood' }, { from: 'wood', to: 'earth' },
                 { from: 'earth', to: 'water' }
@@ -1450,16 +1441,15 @@
         function createLuopanSubdivisionSVG() {
             const svgNS = "http://www.w3.org/2000/svg";
             const svg = document.createElementNS(svgNS, "svg");
-            svg.setAttribute("viewBox", "-120 -120 240 240"); // Centered viewbox
+            svg.setAttribute("viewBox", "-120 -120 240 240"); 
             svg.setAttribute("width", "200");
             svg.setAttribute("height", "200");
             svg.setAttribute("aria-label", T('luopanSubdivisionAriaLabel') || "Luopan 24 Mountains Subdivision Diagram");
 
-            const R = 100; // Outer radius
+            const R = 100; 
 
-            // Draw 8 main direction lines
             for (let i = 0; i < 8; i++) {
-                const angle = (i * 45 - 90) * Math.PI / 180; // Start from North (-90 deg)
+                const angle = (i * 45 - 90) * Math.PI / 180; 
                 const line = document.createElementNS(svgNS, "line");
                 line.setAttribute("x1", "0");
                 line.setAttribute("y1", "0");
@@ -1470,9 +1460,8 @@
                 svg.appendChild(line);
             }
 
-            // Draw 24 mountain subdivision lines
             for (let i = 0; i < 24; i++) {
-                const angle = (i * 15 - 90 + 7.5) * Math.PI / 180; // Midpoint of each 15-deg sector
+                const angle = (i * 15 - 90 + 7.5) * Math.PI / 180; 
                 const line = document.createElementNS(svgNS, "line");
                 line.setAttribute("x1", "0");
                 line.setAttribute("y1", "0");
@@ -1483,15 +1472,14 @@
                 line.style.strokeWidth = '0.5';
                 svg.appendChild(line);
                 
-                // Add mountain character (simplified for this demo)
-                if (i < 3) { // Example for first 3 mountains
+                if (i < 3) { 
                     const text = document.createElementNS(svgNS, "text");
                     const textAngle = (i * 15 - 90 + 7.5) * Math.PI / 180;
                     text.setAttribute("x", (R - 15) * Math.cos(textAngle));
-                    text.setAttribute("y", (R - 15) * Math.sin(textAngle) + 4 ); // Adjust for baseline
+                    text.setAttribute("y", (R - 15) * Math.sin(textAngle) + 4 ); 
                     text.setAttribute("text-anchor", "middle");
                     text.style.fontSize = '10px';
-                    text.textContent = ['癸', '子', '壬'][i]; // Example for N: Gui, Zi, Ren
+                    text.textContent = ['癸', '子', '壬'][i]; 
                     svg.appendChild(text);
                 }
             }
@@ -1508,7 +1496,7 @@
             const innerCircle = document.createElementNS(svgNS, "circle");
             innerCircle.setAttribute("cx", "0");
             innerCircle.setAttribute("cy", "0");
-            innerCircle.setAttribute("r", R * 0.3); // Inner circle for "heaven pool"
+            innerCircle.setAttribute("r", R * 0.3); 
             innerCircle.style.fill = '#f0f0f0';
             innerCircle.style.stroke = '#333';
             innerCircle.style.strokeWidth = '1';
@@ -1527,16 +1515,15 @@
         }
 
         function initializeSvgPlaceholders(parentElement = document) {
-            // Add specific ARIA labels if needed
             appData.content.zh.wuXingGeneratingCycleAriaLabel = "五行相生图";
-            appData.content.en.wuXingGeneratingCycleAriaLabel = "Wu Xing Generating Cycle Diagram";
+            appData.content.en.wuXingGeneratingCycleAriaLabel = "Five Elements Generating Cycle Diagram";
             appData.content.zh.wuXingControllingCycleAriaLabel = "五行相克图";
-            appData.content.en.wuXingControllingCycleAriaLabel = "Wu Xing Controlling Cycle Diagram";
+            appData.content.en.wuXingControllingCycleAriaLabel = "Five Elements Restricting Cycle Diagram"; // Updated
             appData.content.zh.luopanSubdivisionAriaLabel = "罗盘二十四山示意图";
             appData.content.en.luopanSubdivisionAriaLabel = "Luopan 24 Mountains Subdivision Diagram";
 
             parentElement.querySelectorAll('.wuxing-diagram-placeholder[data-diagram-type="generating"]').forEach(ph => {
-                ph.innerHTML = ''; // Clear placeholder text/icon
+                ph.innerHTML = ''; 
                 ph.appendChild(createWuXingGeneratingSVG());
             });
             parentElement.querySelectorAll('.wuxing-diagram-placeholder[data-diagram-type="controlling"]').forEach(ph => {
@@ -1561,7 +1548,7 @@
             qimenToggleButton.textContent = T(appData.settings.qimenOverlayActive ? qimenToggleButton.dataset.translateKeyOn : qimenToggleButton.dataset.translateKeyOff);
             renderGrid();
             if (infoPanelOverlay.classList.contains('visible') && appData.settings.selectedElementId) {
-                renderInfoPanel(appData.settings.selectedElementId); // Update panel if open
+                renderInfoPanel(appData.settings.selectedElementId); 
             }
         });
 
@@ -1571,36 +1558,25 @@
             mountainsToggleButton.setAttribute('aria-pressed', appData.settings.mountainsOverlayActive);
             mountainsToggleButton.textContent = T(appData.settings.mountainsOverlayActive ? mountainsToggleButton.dataset.translateKeyOn : mountainsToggleButton.dataset.translateKeyOff);
             renderGrid();
-            // If panel was open for a palace, and mountains are now active, the selection might need to be cleared or updated.
-            // For now, just re-render. If a mountain was selected, it will stay selected. If a palace was, it will try to re-render palace view.
             if (infoPanelOverlay.classList.contains('visible') && appData.settings.selectedElementId) {
-                 // If switching to mountains OFF, and a mountain was selected, clear selection to avoid broken state.
                 if (!appData.settings.mountainsOverlayActive && appData.settings.selectedElementId.startsWith('mountain-')) {
                     hideInfoPanel();
                 } else {
-                    renderInfoPanel(appData.settings.selectedElementId); // Update panel if open
+                    renderInfoPanel(appData.settings.selectedElementId); 
                 }
             }
         });
 
         infoPanelCloseButton.addEventListener('click', hideInfoPanel);
         infoPanelOverlay.addEventListener('click', (event) => {
-            if (event.target === infoPanelOverlay) { // Click on overlay backdrop
+            if (event.target === infoPanelOverlay) { 
                 hideInfoPanel();
             }
         });
         
-        // Collapsible static sections
         document.querySelectorAll('.info-section summary').forEach(summary => {
             summary.addEventListener('click', (e) => {
-                const detailsElement = summary.parentElement;
-                // Toggle 'open' attribute if browser doesn't do it automatically on summary click
-                // Most modern browsers do, but this is a fallback or can be used for custom logic
-                // if (detailsElement.hasAttribute('open')) {
-                //     detailsElement.removeAttribute('open');
-                // } else {
-                //     detailsElement.setAttribute('open', 'true');
-                // }
+                // Standard browser behavior handles toggle
             });
         });
 
@@ -1608,15 +1584,14 @@
         // --- Initialization ---
         function init() {
             const savedLang = localStorage.getItem('fengshuiAppLang') || appData.settings.defaultLang;
-            addStaticContentTranslations(); // Add translations for panel labels before first render
-            setLanguage(savedLang); // This calls updateAllTexts and renderGrid
-            initializeSvgPlaceholders(); // For static sections
-            // Optionally, open "How to Use" section by default for first-time users
+            addStaticContentTranslations(); 
+            setLanguage(savedLang); 
+            initializeSvgPlaceholders(); 
             const howToUseSection = document.getElementById('how-to-use');
-            if (howToUseSection && !localStorage.getItem('fengshuiAppVisited')) {
+            // if (howToUseSection && !localStorage.getItem('fengshuiAppVisited')) {
                  // howToUseSection.setAttribute('open', true);
-                 // localStorage.setItem('fengshuiAppVisited', 'true'); // Mark as visited
-            }
+                 // localStorage.setItem('fengshuiAppVisited', 'true'); 
+            // }
         }
 
         init();
