@@ -95,13 +95,16 @@
         }
 
         .language-switcher button {
-            padding: 5px 10px;
+            padding: 5px 0; /* Adjust padding to rely on min-width */
             margin-left: 5px;
             border: 1px solid var(--border-color);
             background-color: var(--button-bg-color);
             cursor: pointer;
             transition: background-color var(--transition-speed);
             font-size: 0.9rem;
+            min-width: 60px; /* Added min-width */
+            min-height: 38px; /* Added min-height */
+            text-align: center; /* Ensure text is centered */
         }
         .language-switcher button:hover {
             background-color: var(--button-hover-bg-color);
