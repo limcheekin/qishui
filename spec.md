@@ -14,9 +14,10 @@
     *   Effective visual hierarchy (e.g., font sizes, weights, spacing) must be used to guide the user's attention, especially in information-dense areas like the info panel.
     *   The User Interface (UI) must be intuitive, especially the controls for overlays and language switching.
     *   All interactive elements (buttons, clickable grid cells/segments) must have clear hover, active, and focus states for immediate visual feedback.
+        *   In the circular 24 Mountains view, hover effects should apply directly to the mountain segments.
     *   Subtle, non-jarring CSS transitions (e.g., fade-in/out, slide) should be considered for actions like opening/closing the info panel or switching overlays to enhance smoothness.
     *   The app must be fully responsive, ensuring optimal functionality and readability on both desktop and mobile devices.
-        *   Prioritize clarity on smaller screens.
+        *   Prioritize clarity on smaller screens. The main grid/circular display should adapt, e.g., `max-width: 90vw` on smaller viewports.
         *   Ensure touch targets (buttons, grid cells, segments) are adequately sized for mobile (e.g., minimum 44x44px effective area) to prevent mis-taps.
 
 3.  **Localization:**
@@ -31,22 +32,23 @@
 
 **Detailed Specifications:**
 
-1.  **Central Element: The Ba Gua Grid**
-    *   The app will present a 3x3 grid, serving as the central interactive element.
-    *   The arrangement of the 8 outer cells must follow the standard Houtian Ba Gua sequence:
+1.  **Central Element: The Ba Gua Grid / Luopan Display**
+    *   The app will present a 3x3 grid by default, serving as the central interactive element. When the "24 Mountains" overlay is active, this display transforms into a circular Luopan-like representation.
+    *   **3x3 Grid Arrangement (Default):**
         *   Top Row (L-R): 巽 Xun (SE), 離 Li (S), 坤 Kun (SW)
         *   Middle Row (L-R): 震 Zhen (E), 中宫 Zhong Gong, 兌 Dui (W)
         *   Bottom Row (L-R): 艮 Gen (NE), 坎 Kan (N), 乾 Qian (NW)
-    *   The center cell of the grid will be visually distinct (e.g., a slightly different, neutral background) and labeled "中宫 (Zhong Gong - Central Palace)" (with English translation). It will **not** be clickable for detailed attribute information in any mode or overlay configuration.
+    *   The center cell of the grid/center of the Luopan will be visually distinct (e.g., a slightly different, neutral background, potentially circular in Luopan mode) and labeled "中宫 (Zhong Gong - Central Palace)" (with English translation). It will **not** be clickable for detailed attribute information in any mode or overlay configuration.
+    *   The main container (`.bagua-grid-container`) will have a persistent border, forming the outer square of the grid or the main ring of the Luopan.
 
-2.  **Ba Gua Mode (Default View):**
+2.  **Ba Gua Mode (Default View - 3x3 Grid):**
     *   Each of the 8 outer cells in the grid should be clearly and concisely labeled, with a consistent display order (e.g., 1. Trigram Symbol, 2. Trigram Name, 3. Direction):
         *   Its corresponding **Trigram Symbol** (e.g., ☰, ☵).
         *   Its **Trigram Name** (e.g., 乾 Qian).
         *   Its associated **Direction** (e.g., 西北 Northwest). *(Translations for names and directions required).*
     *   **Visual Cue:** A subtle, non-intrusive background color tint representing the cell's primary Element can be applied to each of the 8 outer cells (e.g., light blue for Water, light green for Wood). Ensure sufficient color contrast between the background tint and text labels for readability (WCAG AA compliance).
 
-3.  **Interactivity in Ba Gua Mode:**
+3.  **Interactivity in Ba Gua Mode (3x3 Grid):**
     *   Users must be able to click on each of the 8 outer cells.
     *   Upon clicking a cell, a designated information panel (e.g., a well-styled modal popup or a dynamic sidebar section) should appear. This panel must be designed to handle varying amounts of information clearly. Content should be scrollable if necessary, especially on mobile.
     *   The info panel must be dismissible via clear methods (e.g., an "X" button, clicking outside the panel area, pressing the Escape key).
@@ -64,26 +66,26 @@
 
 4.  **Qimen Dunjia Overlay Mode:**
     *   **Activation Button:** A clearly visible button labeled "Show Qimen Gates (八门)" (with English translation, changing to "Hide Qimen Gates" when active) must be present. This button should have distinct visual states for "on" and "off" (e.g., color change, icon change).
-    *   When toggled on:
-        *   New labels for the **Eight Gates (八门)** appear prominently within each of the 8 outer cells, *in addition* to existing Ba Gua labels.
-        *   Each cell is labeled with the Gate that **originates** from its Ba Gua location (fixed "home palace" mapping):
+    *   When toggled on (applies to both 3x3 grid and circular 24 Mountains view):
+        *   New labels for the **Eight Gates (八门)** appear prominently within each of the 8 outer cells/palace representations, *in addition* to existing Ba Gua/Palace labels.
+        *   Each cell/palace representation is labeled with the Gate that **originates** from its Ba Gua location (fixed "home palace" mapping):
             *   休门 (Xiu Men) in 坎 (Kan) Palace
             *   生门 (Sheng Men) in 艮 (Gen) Palace
             *   伤门 (Shang Men) in 震 (Zhen) Palace
             *   杜门 (Du Men) in 巽 (Xun) Palace
             *   景门 (Jing Men) in 离 (Li) Palace
             *   死门 (Si Men) in 坤 (Kun) Palace
-            *   惊门 (Jing Men - different Jing) in 兑 (Dui) Palace
+            *   惊门 (Jing Men - different Jing) in 兌 (Dui) Palace
             *   开门 (Kai Men) in 乾 (Qian) Palace
         *   **Label Clarity Strategy:** To ensure labels do not excessively overlap:
             *   Consider a slightly smaller font for Gate names when the overlay is active.
-            *   Position Gate names consistently (e.g., below the Ba Gua name).
-            *   If necessary for extreme space constraints on the grid, Gate names could be abbreviated (e.g., "开" for "开门"), with full names always available in the info panel.
-        *   The Central Palace ("中宫") cell, when this overlay is active, displays a simple, generic star symbol (e.g., ★ or ☆) without further interactive detail.
+            *   Position Gate names consistently (e.g., below the Ba Gua name or within mountain segments if 24 Mountains view is also active).
+            *   If necessary for extreme space constraints on the grid, Gate names could be abbreviated (e.g., "开" for "开门"), with full names always available in the info panel. Short English names (e.g., "Open") will be used for Gate overlays in English.
+        *   The Central Palace ("中宫") cell/area, when this overlay is active, displays a simple, generic star symbol (e.g., ★ or ☆) without further interactive detail.
 
 5.  **Interactivity in Qimen Dunjia Overlay Mode:**
-    *   When the "Overlay Qimen Gates" mode is active, clicking on an outer cell updates the information panel to display, with clear visual separation (e.g., headings, horizontal rules) between sections:
-        *   **All information from Ba Gua Mode (Spec 3)** for context.
+    *   When the "Overlay Qimen Gates" mode is active, clicking on an outer cell (in 3x3 mode) or a mountain segment (in 24 Mountains mode) updates the information panel to display, with clear visual separation (e.g., headings, horizontal rules) between sections:
+        *   **All information from Ba Gua Mode (Spec 3) or Mountain Mode (Spec 7.3) respectively** for context.
         *   **AND additional Qimen Gate Information (clearly sectioned):**
             *   **Gate Name** (e.g., "开门 (Kai Men) - Open Gate").
             *   **Original Palace & Derived Element:** "Originates from: [Original Ba Gua Palace Name, e.g., 乾 (Qian) Palace]. Derived Element: [Gate's intrinsic Element, e.g., 金 (Metal)]."
@@ -106,13 +108,16 @@
 7.  **Feng Shui 二十四山 (24 Mountains) Overlay Mode:**
     *   **7.1. Activation Button:** A clearly visible, separate button labeled "Show 24 Mountains (二十四山)" (with English translation, changing to "Hide 24 Mountains" when active), with distinct visual states for "on" and "off". This overlay can be active independently or in conjunction with the Qimen Gates overlay.
     *   **7.1.1. Overlay Indicator:** The UI must clearly indicate which overlays are active (e.g., persistent visual cues on toggle buttons, a small status area).
-    *   **7.2. Visual Representation on the Grid (24 Mountains Overlay Active):**
-        *   Each of the 8 outer Ba Gua cells is visually subdivided into three distinct, equal segments (e.g., using subtle internal borders).
+    *   **7.2. Visual Representation on the Grid (24 Mountains Overlay Active - Circular Luopan View):**
+        *   The main grid container (`.bagua-grid-container`) changes its display mode (e.g., from `grid` to `block` with `position: relative`).
+        *   The 8 outer Ba Gua palace representations are arranged in a **circular layout** around the central Zhong Gong.
+            *   The order follows standard Luopan conventions (e.g., Li/South at the top, then clockwise: Kun, Dui, Qian, Kan, Gen, Zhen, Xun).
+            *   Each of these 8 outer palace "cells" becomes a container, absolutely positioned and rotated to point outwards from the center. These container cells will have transparent backgrounds and no borders.
+            *   Inside each of these 8 rotated palace containers, three distinct, equal segments are rendered horizontally (relative to the rotated container), representing the three Mountains. Each segment is visually separated (e.g., by subtle dashed internal borders).
         *   Each of these 24 segments is clearly labeled with its **specific Mountain Name** (e.g., 壬 Ren, 子 Zi, 癸 Gui).
-            *   **Segment Ordering:** Follow standard Luopan convention for segment order within a palace (e.g., for Kan/North, viewed facing the grid: 壬 Ren (N3) on left, 子 Zi (N2) in middle, 癸 Gui (N1) on right).
-            *   **Legibility Strategy:** Use single Chinese characters for Mountain names on the grid (壬, 子, 癸). Full names and Pinyin will be in the info panel. Consider adjusting Ba Gua Trigram/Name size or position if needed. On hover over a Ba Gua cell (when 24 Mountains overlay is active), its three mountain segments could be visually highlighted.
-        *   Existing Ba Gua labels remain visible, styled for clarity alongside Mountain segments.
-        *   Central Palace is not subdivided.
+            *   **Segment Ordering:** Follow standard Luopan convention for segment order within a palace (e.g., for Kan/North, viewed facing the grid, left-to-right within its rotated container: 壬 Ren (N3), 子 Zi (N2), 癸 Gui (N1)).
+            *   **Legibility Strategy:** Use single Chinese characters for Mountain names on the grid segments (壬, 子, 癸). Full names and Pinyin will be in the info panel. The parent palace's trigram symbol and short name are displayed within each mountain segment for context.
+        *   The Zhong Gong is styled as a circle and positioned in the absolute center of the Luopan display.
     *   **7.3. Interactivity with 24 Mountains Overlay Active (Clicking a Mountain Segment):**
         *   The information panel, leading with Mountain-specific info, displays the following for the **selected Mountain** (all text translatable, clearly sectioned):
             *   **A. Mountain Name:** (e.g., "子 (Zi) Mountain").
@@ -125,8 +130,8 @@
         *   The information panel presents a comprehensive, well-organized view, potentially using collapsible sub-sections for Ba Gua/Qimen info to manage density, especially on mobile. The Mountain info (7.3 A-F) should be visible by default.
         *   **Information Hierarchy:**
             1.  **All Mountain information (Spec 7.3 A-F).**
-            2.  **Parent Ba Gua Palace Information (briefly, for context).**
-            3.  **PLUS, clearly sectioned Qimen Gate information for the parent Ba Gua Palace:**
+            2.  **Parent Ba Gua Palace Information (briefly, for context, potentially within a collapsible section).**
+            3.  **PLUS, clearly sectioned Qimen Gate information for the parent Ba Gua Palace (potentially within a collapsible section):**
                 *   "Qimen Gate in this Sector: [Gate Name, e.g., 休门 (Xiu Men)] (occupying the [Parent Ba Gua Palace Name, e.g., 坎 (Kan) Palace] in this foundational view)."
                 *   The Gate's properties and conceptual interaction (Spec 5, adapted for this context).
 
@@ -144,14 +149,14 @@
           }
         };
         ```
-    *   Ensure all translated text grounded with Google Search.    
+    *   Ensure all translated text grounded with Google Search.
 *   **Initial State & Reset:**
-    *   The app should load in a defined initial state: Ba Gua mode active, Chinese (Simplified) language selected, no cell selected, info panel hidden.
-    *   Clicking an already selected cell/segment or clicking on a non-interactive area of the grid (if feasible) could deselect it and hide the info panel, acting as a "clear selection" mechanism.
+    *   The app should load in a defined initial state: Ba Gua mode active (3x3 grid), Chinese (Simplified) language selected, no cell selected, info panel hidden.
+    *   Clicking an already selected cell/segment (if the info panel is visible for it) or clicking the info panel's close button/overlay should deselect it and hide the info panel.
 *   **Performance:** Ensure smooth interactions and quick loading times, given all code is inline. Optimize asset handling if SVGs become complex.
 *   **Accessibility (A11y):**
     *   **Keyboard Navigation:** All interactive elements (grid cells/segments, buttons, language switcher, info panel close button, collapsible section toggles) must be focusable and operable via keyboard (e.g., using Tab for navigation, Enter/Space for activation).
-    *   **ARIA Attributes:** Use ARIA attributes appropriately: `aria-expanded` for collapsible sections, `aria-label` for icon-only buttons or ambiguous links, `aria-live="polite"` for the info panel content updates to inform screen readers of changes, `role="button"` for non-native button elements, etc.
+    *   **ARIA Attributes:** Use ARIA attributes appropriately: `aria-expanded` for collapsible sections, `aria-label` for icon-only buttons or ambiguous links, `aria-live="polite"` for the info panel content updates to inform screen readers of changes, `role="button"` for non-native button elements, `role="grid"`, `role="gridcell"` for the grid components.
     *   **Semantic HTML:** Use semantic HTML elements where appropriate (e.g., `<nav>`, `<button>`, `<main>`, `<aside>`).
     *   **Color Contrast:** Maintain sufficient color contrast for all text and UI elements as per WCAG AA guidelines.
     *   **Trigram Symbols:** If Trigram symbols (☰, ☵, etc.) are Unicode text characters, test how they are announced by screen readers. If they are SVGs or images, they must have appropriate alt text or `aria-label`.

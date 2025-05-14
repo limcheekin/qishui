@@ -167,6 +167,13 @@
             margin: 20px auto; /* Center grid */
             border: 2px solid var(--primary-text-color);
             aspect-ratio: 1 / 1; /* Make it a square */
+            position: relative; /* Added for absolute positioning of children in circular mode */
+        }
+
+        /* Styles for circular layout when mountains overlay is active */
+        .bagua-grid-container.mountains-overlay-active {
+            display: block; /* Override grid display */
+            /* border-radius: 50%; Optional: if you want the container itself to be a circle */
         }
 
         .grid-cell {
@@ -186,6 +193,18 @@
             background-color: #f0f0f0;
             transform: scale(1.03);
         }
+        
+        /* Disable default hover for outer cells in circular mode */
+        .bagua-grid-container.mountains-overlay-active .grid-cell:not(.zhonggong):hover {
+            background-color: transparent; /* Or original palace color if set */
+            transform: none; /* Override scaling, JS handles positioning transform */
+        }
+        /* Add hover to segments themselves in circular mode */
+        .bagua-grid-container.mountains-overlay-active .mountain-segment:hover {
+             background-color: rgba(0,0,0,0.05); /* Subtle hover */
+        }
+
+
         .grid-cell:focus:not(.zhonggong) {
             outline: 2px solid var(--highlight-color);
             outline-offset: -2px;
@@ -193,6 +212,14 @@
         .grid-cell.active-selection {
             box-shadow: 0 0 0 3px var(--highlight-color) inset;
         }
+        .bagua-grid-container.mountains-overlay-active .grid-cell.active-selection {
+             /* Ensure selection is visible on potentially transparent cells */
+            /* box-shadow: 0 0 0 3px var(--highlight-color); /* Outer glow might be better */
+        }
+         .bagua-grid-container.mountains-overlay-active .mountain-segment.active-selection {
+            box-shadow: 0 0 0 2px var(--highlight-color) inset;
+        }
+
 
         .grid-cell .trigram-symbol {
             font-size: 1.8em; /* Relative to cell font-size */
@@ -233,6 +260,7 @@
             flex-direction: row; /* For horizontal segments */
             align-items: stretch; /* Make segments fill height */
             justify-content: space-around; /* Distribute segments */
+            border: none; /* Hide border of the cell itself in circular mode */
         }
 
         .mountain-segment {
@@ -477,6 +505,10 @@
             .language-switcher {
                  align-self: flex-end; /* Align to right if header wraps */
             }
+            
+            .bagua-grid-container {
+                 max-width: 90vw; /* Allow grid to shrink more on smaller screens */
+            }
 
             .grid-cell {
                 font-size: 0.7rem; /* Smaller base font for cells on mobile */
@@ -613,7 +645,7 @@
                 mountainsOverlayActive: false,
                 selectedElementId: null, // e.g., 'palace-kan', 'mountain-zi'
             },
-            palaceOrder: ['xun', 'li', 'kun', 'zhen', 'zhonggong', 'dui', 'gen', 'kan', 'qian'],
+            palaceOrder: ['xun', 'li', 'kun', 'zhen', 'zhonggong', 'dui', 'gen', 'kan', 'qian'], // For 3x3 grid rendering order
             palaces: {
                 xun: { trigramSymbol: "☴", elementId: 'wood', color: 'rgba(144, 238, 144, 0.5)', mountains: ['chen', 'xun_m', 'si'], gateId: 'du', nameKey: 'palaceXun', dirKey: 'dirSE', dirDetailKey: 'palaceXunDirDetail', qualitiesKey: 'qualitiesXun', enhancementKey: 'enhanceXun' },
                 li: { trigramSymbol: "☲", elementId: 'fire', color: 'rgba(240, 128, 128, 0.5)', mountains: ['bing', 'wu', 'ding'], gateId: 'jing', nameKey: 'palaceLi', dirKey: 'dirS', dirDetailKey: 'palaceLiDirDetail', qualitiesKey: 'qualitiesLi', enhancementKey: 'enhanceLi' },
@@ -1017,7 +1049,16 @@
         // --- Grid Rendering ---
         function renderGrid() {
             baguaGrid.innerHTML = ''; 
-            baguaGrid.classList.toggle('mountains-overlay-active', appData.settings.mountainsOverlayActive);
+            baguaGrid.className = 'bagua-grid-container'; // Reset classes
+            if (appData.settings.mountainsOverlayActive) {
+                baguaGrid.classList.add('mountains-overlay-active');
+            }
+
+            // Defines the visual slot index for circular layout (South/Li at top, clockwise)
+            const circularOrderMap = { 
+                'li': 0, 'kun': 1, 'dui': 2, 'qian': 3,
+                'kan': 4, 'gen': 5, 'zhen': 6, 'xun': 7
+            };
 
             appData.palaceOrder.forEach(palaceId => {
                 const palace = appData.palaces[palaceId];
@@ -1025,10 +1066,54 @@
                 cell.classList.add('grid-cell');
                 cell.setAttribute('role', 'gridcell');
                 cell.dataset.palaceId = palaceId;
-                cell.style.backgroundColor = palace.color;
 
+                // Apply transformations for circular layout if mountains overlay is active
+                if (appData.settings.mountainsOverlayActive) {
+                    cell.style.backgroundColor = 'transparent'; // Outer cells are transparent containers
+
+                    if (palaceId === 'zhonggong') {
+                        cell.classList.add('zhonggong');
+                        cell.style.position = 'absolute';
+                        cell.style.width = '30%'; 
+                        cell.style.height = '30%';
+                        cell.style.top = '50%';
+                        cell.style.left = '50%';
+                        cell.style.transform = 'translate(-50%, -50%)';
+                        cell.style.borderRadius = '50%';
+                        cell.style.backgroundColor = palace.color; // Keep zhonggong color
+                    } else {
+                        // One of the 8 outer palaces
+                        const palaceIndexInCircular = circularOrderMap[palaceId];
+                        if (typeof palaceIndexInCircular !== 'undefined') { // Ensure palaceId is in circular map
+                            const angleDeg = palaceIndexInCircular * 45; // Li=0, Kun=45,...
+
+                            const gridComputedWidth = baguaGrid.offsetWidth || parseFloat(getComputedStyle(baguaGrid).maxWidth) || 600;
+                            const gridRadius = gridComputedWidth / 2;
+                            
+                            const cellWidth = gridComputedWidth * 0.28; 
+                            const cellHeight = gridComputedWidth * 0.20; 
+                            const R_cells = gridRadius * 0.70; // Radius for cell centers
+
+                            cell.style.position = 'absolute';
+                            cell.style.width = `${cellWidth}px`;
+                            cell.style.height = `${cellHeight}px`;
+                            cell.style.border = 'none'; // Hide cell border in circular mode
+                            
+                            const xPos = R_cells * Math.sin(angleDeg * Math.PI / 180);
+                            const yPos = -R_cells * Math.cos(angleDeg * Math.PI / 180);
+
+                            cell.style.left = `50%`;
+                            cell.style.top = `50%`;
+                            cell.style.transform = `translate(-50%, -50%) translate(${xPos}px, ${yPos}px) rotate(${angleDeg}deg)`;
+                        }
+                    }
+                } else { // Original 3x3 grid styling
+                    cell.style.backgroundColor = palace.color;
+                }
+
+                // --- Content Filling Logic ---
                 if (palaceId === 'zhonggong') {
-                    cell.classList.add('zhonggong');
+                    cell.classList.add('zhonggong'); // Ensure class is present even if not in circular mode initially
                     cell.setAttribute('tabindex', '-1'); 
                     const zhongGongLabel = document.createElement('span');
                     zhongGongLabel.textContent = T('zhongGongLabel');
@@ -1036,17 +1121,19 @@
                         zhongGongLabel.innerHTML = `<span class="zhonggong-star" aria-hidden="true">${T('qimenStarSymbol')}</span><br>${T('zhongGongLabel')}`;
                     }
                     cell.appendChild(zhongGongLabel);
-                } else {
+                } else { // Outer palaces
                     cell.setAttribute('tabindex', '0');
                     cell.addEventListener('click', handleCellClick);
                     cell.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') handleCellClick(e); });
 
                     if (appData.settings.mountainsOverlayActive) {
+                        // Populate with mountain segments
                         palace.mountains.forEach(mountainId => {
                             const segment = document.createElement('div');
                             segment.classList.add('mountain-segment');
                             segment.dataset.mountainId = mountainId;
                             segment.dataset.palaceId = palaceId; 
+                            // segment.style.backgroundColor = palace.color; // Optional: color segments based on palace
 
                             const mountainChar = document.createElement('span');
                             mountainChar.classList.add('mountain-char');
@@ -1070,7 +1157,7 @@
                             }
                             cell.appendChild(segment);
                         });
-                    } else {
+                    } else { // 3x3 view: Populate with standard palace info
                         const trigramSymbol = document.createElement('span');
                         trigramSymbol.classList.add('trigram-symbol');
                         trigramSymbol.setAttribute('aria-hidden', 'true'); 
@@ -1091,7 +1178,6 @@
                             const gate = appData.gates[palace.gateId];
                             const gateNameOverlay = document.createElement('span');
                             gateNameOverlay.classList.add('gate-name-overlay');
-                            // Use Chinese part of nameKey for overlay, or full shortNameKey for EN to ensure Door name part is there
                             let overlayText = T(gate.nameKey).split('(')[0].trim();
                             if (getLang() === 'en') {
                                 overlayText = T(gate.shortNameKey);
@@ -1114,7 +1200,15 @@
                 if (type === 'palace') {
                     targetElement = baguaGrid.querySelector(`.grid-cell[data-palace-id="${id}"]`);
                 } else if (type === 'mountain') {
+                    // In circular mode, the direct parent .grid-cell of a mountain might be hard to highlight distinctively.
+                    // Highlighting the segment itself is more precise.
                     targetElement = baguaGrid.querySelector(`.mountain-segment[data-mountain-id="${id}"]`);
+                     if (!targetElement && appData.settings.mountainsOverlayActive) { // Fallback for palace selection in circular mode
+                        const mountainData = appData.mountains[id];
+                        if (mountainData) {
+                             targetElement = baguaGrid.querySelector(`.grid-cell[data-palace-id="${mountainData.parentPalaceId}"]`);
+                        }
+                    }
                 }
                 if (targetElement) {
                     targetElement.classList.add('active-selection');
@@ -1125,24 +1219,39 @@
         // --- Interaction Handling ---
         function handleCellClick(event) {
             let target = event.currentTarget; 
-            if (event.type === 'click') target = event.target.closest('.grid-cell, .mountain-segment'); 
+            if (event.type === 'click') { // More precise target for clicks inside cells
+                 target = event.target.closest('.mountain-segment') || event.target.closest('.grid-cell');
+            }
             
             if (!target || target.classList.contains('zhonggong')) return;
 
             let elementId;
-            if (target.classList.contains('mountain-segment')) {
+            if (target.classList.contains('mountain-segment') && target.dataset.mountainId) {
                 elementId = `mountain-${target.dataset.mountainId}`;
             } else if (target.classList.contains('grid-cell') && target.dataset.palaceId) {
-                if (appData.settings.mountainsOverlayActive && target.dataset.mountainId) { // Should not happen if logic is correct
-                     elementId = `mountain-${target.dataset.mountainId}`;
-                } else {
+                 // If mountains are active but a non-segment part of the cell is clicked (less likely with current CSS)
+                 // or if mountains are not active, this is a palace click.
+                if (appData.settings.mountainsOverlayActive && !target.querySelector('.mountain-segment')) {
+                    // This case should ideally not happen if cells are filled with segments.
+                    // Default to palace if somehow a bare cell area in mountain mode is clicked.
                      elementId = `palace-${target.dataset.palaceId}`;
+                } else if (!appData.settings.mountainsOverlayActive) {
+                     elementId = `palace-${target.dataset.palaceId}`;
+                } else { // If mountain-active and clicked on a cell that contains segments, but not a segment itself (e.g. edge)
+                    // Try to find a default mountain or just use palace
+                    const firstMountain = appData.palaces[target.dataset.palaceId].mountains[1]; // Middle mountain
+                    if (firstMountain) {
+                         elementId = `mountain-${firstMountain}`;
+                    } else {
+                         elementId = `palace-${target.dataset.palaceId}`;
+                    }
                 }
             }
 
+
             if (!elementId) return;
 
-            if (appData.settings.selectedElementId === elementId) { 
+            if (appData.settings.selectedElementId === elementId && infoPanelOverlay.classList.contains('visible')) { 
                 hideInfoPanel();
             } else {
                 appData.settings.selectedElementId = elementId;
@@ -1250,14 +1359,17 @@
 
         function hideInfoPanel() {
             infoPanelOverlay.classList.remove('visible');
-            appData.settings.selectedElementId = null;
-            updateSelectedCellVisual();
+            // Do not nullify selectedElementId here if we want to re-render panel on toggle
+            // appData.settings.selectedElementId = null; 
+            // updateSelectedCellVisual(); // Keep visual selection if panel is just hidden by toggle
             document.removeEventListener('keydown', handleEscapeKey);
         }
 
         function handleEscapeKey(event) {
             if (event.key === 'Escape') {
                 hideInfoPanel();
+                appData.settings.selectedElementId = null; // Clear selection on ESC
+                updateSelectedCellVisual();
             }
         }
         
@@ -1549,7 +1661,7 @@
             qimenToggleButton.classList.toggle('active', appData.settings.qimenOverlayActive);
             qimenToggleButton.setAttribute('aria-pressed', appData.settings.qimenOverlayActive);
             qimenToggleButton.textContent = T(appData.settings.qimenOverlayActive ? qimenToggleButton.dataset.translateKeyOn : qimenToggleButton.dataset.translateKeyOff);
-            renderGrid();
+            renderGrid(); // Re-render grid for Qimen overlay changes
             if (infoPanelOverlay.classList.contains('visible') && appData.settings.selectedElementId) {
                 renderInfoPanel(appData.settings.selectedElementId); 
             }
@@ -1560,20 +1672,41 @@
             mountainsToggleButton.classList.toggle('active', appData.settings.mountainsOverlayActive);
             mountainsToggleButton.setAttribute('aria-pressed', appData.settings.mountainsOverlayActive);
             mountainsToggleButton.textContent = T(appData.settings.mountainsOverlayActive ? mountainsToggleButton.dataset.translateKeyOn : mountainsToggleButton.dataset.translateKeyOff);
-            renderGrid();
-            if (infoPanelOverlay.classList.contains('visible') && appData.settings.selectedElementId) {
-                if (!appData.settings.mountainsOverlayActive && appData.settings.selectedElementId.startsWith('mountain-')) {
-                    hideInfoPanel();
+            
+            // If switching from circular (mountains active) to grid, and a mountain was selected,
+            // it might be more intuitive to clear selection or switch to its parent palace.
+            if (!appData.settings.mountainsOverlayActive && appData.settings.selectedElementId && appData.settings.selectedElementId.startsWith('mountain-')) {
+                const mountainId = appData.settings.selectedElementId.split('-')[1];
+                const parentPalaceId = appData.mountains[mountainId]?.parentPalaceId;
+                if (parentPalaceId) {
+                    appData.settings.selectedElementId = `palace-${parentPalaceId}`;
                 } else {
-                    renderInfoPanel(appData.settings.selectedElementId); 
+                    appData.settings.selectedElementId = null; // Clear if no parent found
                 }
+            }
+            
+            renderGrid(); // This will apply/remove circular layout styles and positions
+            
+            if (appData.settings.selectedElementId) {
+                 if (infoPanelOverlay.classList.contains('visible')) {
+                    renderInfoPanel(appData.settings.selectedElementId); // Re-render panel with current selection
+                 }
+                 updateSelectedCellVisual(); // Update visual selection on grid
+            } else {
+                hideInfoPanel(); // Hide panel if selection was cleared
             }
         });
 
-        infoPanelCloseButton.addEventListener('click', hideInfoPanel);
+        infoPanelCloseButton.addEventListener('click', () => {
+            hideInfoPanel();
+            appData.settings.selectedElementId = null; // Clear selection on panel close
+            updateSelectedCellVisual();
+        });
         infoPanelOverlay.addEventListener('click', (event) => {
             if (event.target === infoPanelOverlay) { 
                 hideInfoPanel();
+                appData.settings.selectedElementId = null; // Clear selection on overlay click
+                updateSelectedCellVisual();
             }
         });
         
@@ -1588,9 +1721,9 @@
         function init() {
             const savedLang = localStorage.getItem('fengshuiAppLang') || appData.settings.defaultLang;
             addStaticContentTranslations(); 
-            setLanguage(savedLang); 
+            setLanguage(savedLang); // This calls renderGrid and updateAllTexts
             initializeSvgPlaceholders(); 
-            const howToUseSection = document.getElementById('how-to-use');
+            // const howToUseSection = document.getElementById('how-to-use');
             // if (howToUseSection && !localStorage.getItem('fengshuiAppVisited')) {
                  // howToUseSection.setAttribute('open', true);
                  // localStorage.setItem('fengshuiAppVisited', 'true'); 
